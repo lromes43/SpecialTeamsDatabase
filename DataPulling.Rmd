@@ -16,6 +16,9 @@ install.packages("RMySQL")
 install.packages("RMariaDB")
 library(RMySQL)
 library(RMariaDB)
+library(tidyr)
+library(ggplot2)
+library(reshape2)
 ```
 #Connecting MySql to DB
 ```{r}
@@ -47,7 +50,7 @@ print(df_punt)
 df_conditions <- dbGetQuery(mysqlconnection, "Describe Conditions")
 ```
 ```{r}
-df_data <- dbGetQuery(mysqlconnection, "SELECT P.PuntID, P.PlayerIDP, P.PLocID, P.PlayerIDLS, P.SnapLocID, P.PDate, P.Snaptime, P.OP,                                         P.H2F, P.Hang, P.Distance, 
+df_data <- dbGetQuery(mysqlconnection, "SELECT P.PuntID, P.PlayerIDP, P.PLocID, P.PlayerIDLS, P.SnapLocID, P.PDate, P.Snaptime, P.OP,                                         P.H2F, P.Hang, P.Distance, P.Efficiency, 
                                         PL.Height, PL.Weight,
                                         C.Practice, C.Game, C.precipitation, C.Wind, C.Grass, C.Turf, C.Temp
                                         
@@ -57,6 +60,63 @@ df_data <- dbGetQuery(mysqlconnection, "SELECT P.PuntID, P.PlayerIDP, P.PLocID, 
                                         JOIN Conditions C ON P.PDATE = C.DATE
                           ")
 ```
+```{r}
+dim(df_data)
+view(df_data)
+```
 
+
+##Replacing Date with Number for normalization
+```{r}
+df_data$PDate <- as.numeric(as.Date(df_data$PDate))
+df_data <- df_data[, -1]
+dim(df_data)
+```
+
+##Normalizing Data
+```{r}
+columns <- c(5,6,7,8,9,10,12,13,16,17,20)
+df_norm <- df_data
+df_norm[columns] <- scale(df_data[columns])
+head(df_norm)
+view(df_norm)
+```
+
+##Missing Value Imputation and Comparison Before and After
+```{r}
+sum(is.na(df_norm))
+colSums(is.na(df_norm))
+df_before <- df_norm
+impute_median <- function(x){
+  x[is.na(x)] <-median(x, na.rm = TRUE)
+  return(x)
+}
+df_after <- as.data.frame(lapply(df_norm, impute_median))
+
+
+
+##Plotting
+
+# Select numeric columns only
+numeric_cols <- sapply(df_norm, is.numeric)
+
+# Prepare data for plotting density before and after imputation
+plot_data_before <- melt(df_before[, numeric_cols])
+plot_data_after <- melt(df_after[, numeric_cols])
+
+plot_data_before$Type <- "Before Imputation"
+plot_data_after$Type <- "After Imputation"
+
+plot_data <- rbind(plot_data_before, plot_data_after)
+
+ggplot(plot_data, aes(x = value, color = Type)) +
+  geom_density() +
+  facet_wrap(~variable, scales = "free") +
+  labs(title = "Density Plot Before and After Median Imputation",
+       x = "Value",
+       y = "Density") +
+  theme_minimal()
+
+```
 
 
