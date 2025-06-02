@@ -1,0 +1,62 @@
+---
+title: "DataPulling"
+output: html_document
+date: "2025-06-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+##Installing Packages to connect MySql to R
+```{r}
+install.packages("RMySQL")
+install.packages("RMariaDB")
+library(RMySQL)
+library(RMariaDB)
+```
+#Connecting MySql to DB
+```{r}
+mysqlconnection = dbConnect(RMySQL:: MySQL(),
+                            dbname = 'Football',
+                            host = 'localhost',
+                            port = 3306,
+                            user = 'Lromes',
+                            password = '1234!')
+```
+
+##Listing the tables in DB
+```{r}
+dbListTables(mysqlconnection)
+```
+
+
+
+
+##Writing Queries
+```{r}
+
+df_ko <- dbGetQuery(mysqlconnection, "SELECT * FROM kickoff")
+print(df_ko)
+
+df_punt <- dbGetQuery(mysqlconnection, "SELECT * From Punt")
+print(df_punt)
+
+df_conditions <- dbGetQuery(mysqlconnection, "Describe Conditions")
+```
+```{r}
+df_data <- dbGetQuery(mysqlconnection, "SELECT P.PuntID, P.PlayerIDP, P.PLocID, P.PlayerIDLS, P.SnapLocID, P.PDate, P.Snaptime, P.OP,                                         P.H2F, P.Hang, P.Distance, 
+                                        PL.Height, PL.Weight,
+                                        C.Practice, C.Game, C.precipitation, C.Wind, C.Grass, C.Turf, C.Temp
+                                        
+                                        FROM Player PL
+                                        
+                                        JOIN Punt P ON PL.PlayerID = P.PlayerIDP
+                                        JOIN Conditions C ON P.PDATE = C.DATE
+                          ")
+```
+
+
+
