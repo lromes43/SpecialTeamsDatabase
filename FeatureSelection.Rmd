@@ -75,7 +75,7 @@ install.packages("MASS")
 library(MASS)
 ```
 ```{r}
-summary(data$Game)
+summary(data$H2F)
 ```
 
 
@@ -109,15 +109,41 @@ game = table(data$GameCat, data$Efficiency)
 print(game)
 
 ##Grass Bins
+data$GrassCat <- cut (
+  data$Grass,
+  breaks = c(-Inf, 0, 1),
+  labels = c("Grass", "Turf"),
+  right = TRUE
+)
 
+##Grass Contingency Table
 
+grass = data.frame(data$GrassCat, data$Efficiency)
+grass = table(data$GrassCat, data$Efficiency)
+print(grass)
 
+##H2F Bins
+
+data$H2FCat <- cut (
+  data$H2F,
+  breaks = c(-Inf, 1.220, 1.4, Inf),
+  labels = c("Great", "Average", "Poor"),
+  right = TRUE
+)
+
+##H2F Contingency Table
+
+H2F = data.frame(data$H2FCat, data$Efficiency)
+H2F = table(data$H2FCat, data$Efficiency)
+print(H2F)
 
 ```
 ##Applying Chi2
 ```{r}
-DistanceChi <- print(chisq.test(dist))
-GameChi <- print(chisq.test(game))
+DistanceChi <- print(chisq.test(dist)) ## test for dist
+GameChi <- print(chisq.test(game)) ##test for game
+GrassChi <- print(chisq.test(grass)) ##Test for grass
+H2FChi <- print(chisq.test(H2F)) ## test for hand to foot
 ```
 ##Visualizing Chi2
 ```{r}
