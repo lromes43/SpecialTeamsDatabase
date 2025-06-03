@@ -62,7 +62,9 @@ df_data <- dbGetQuery(mysqlconnection, "SELECT P.PuntID, P.PlayerIDP, P.PLocID, 
 ```
 ```{r}
 dim(df_data)
-view(df_data)
+View(df_data)
+write.csv(df_data, "~/Desktop/Personal/Football ML.csv", row.names = FALSE)
+
 ```
 
 
@@ -119,4 +121,7 @@ ggplot(plot_data, aes(x = value, color = Type)) +
 
 ```
 
+```{r}
+write.csv(df_norm, "~/Desktop/Personal/Football ML.csv", row.names = FALSE)
+```
 
