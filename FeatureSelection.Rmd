@@ -11,42 +11,61 @@ knitr::opts_chunk$set(echo = TRUE)
 ##Feature Selection Methods going to use: Information Gain, Mutual Information, Chi-Squared, Fisher's Score, Pearson's Correlation Coefficient (R), Variance Threshold
 #Start with 20 features maybe eliminate down to like top 10 then once have that can design experiment
 
-##Information Gain
+##Information Gain packages loaded in
 ```{r}
 install.packages("funModeling")
 library(funModeling)
 ```
 
-
 ##Load in data
 ```{r}
-data <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataFinal.csv")
+data <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataPulled.csv")
 ```
 
-##Run Information Gain Ratio
+##Run Information Gain Ratio, omit height and weight
 
 ```{r}
-gain_ratio(data$PlayerIDP, data$Efficiency)
-gain_ratio(data$PLocID, data$Efficiency)
-gain_ratio(data$PlayerIDLS, data$Efficiency)
-gain_ratio(data$SnapLocID, data$Efficiency)
-gain_ratio(data$PDate, data$Efficiency)
-gain_ratio(data$Snaptime, data$Efficiency)
-gain_ratio(data$OP, data$Efficiency)
-gain_ratio(data$H2F, data$Efficiency)
-gain_ratio(data$Hang, data$Efficiency)
-gain_ratio(data$Distance, data$Efficiency)
-gain_ratio(data$Height, data$Efficiency)
-gain_ratio(data$Weight, data$Efficiency)
-gain_ratio(data$Practice, data$Efficiency)
-gain_ratio(data$Game, data$Efficiency)
-gain_ratio(data$precipitation, data$Efficiency)
-gain_ratio(data$Wind, data$Efficiency)
-gain_ratio(data$Grass, data$Efficiency)
-gain_ratio(data$Turf, data$Efficiency)
-gain_ratio(data$Temp, data$Efficiency)
+IG_PlayerIDP <- gain_ratio(data$PlayerIDP, data$Efficiency)
+IG_PLocID <- gain_ratio(data$PLocID, data$Efficiency)
+IG_PlayerIDLS <- gain_ratio(data$PlayerIDLS, data$Efficiency)
+IG_SnapLocID <- gain_ratio(data$SnapLocID, data$Efficiency)
+IG_PDate <- gain_ratio(data$PDate, data$Efficiency)
+IG_Snaptime <- gain_ratio(data$Snaptime, data$Efficiency)
+IG_OP <- gain_ratio(data$OP, data$Efficiency)
+IG_H2F <- gain_ratio(data$H2F, data$Efficiency)
+IG_Hang <- gain_ratio(data$Hang, data$Efficiency)
+IG_Distance <- gain_ratio(data$Distance, data$Efficiency)
+IG_Practice <- gain_ratio(data$Practice, data$Efficiency)
+IG_Game <- gain_ratio(data$Game, data$Efficiency)
+IG_Precipitation <- gain_ratio(data$precipitation, data$Efficiency)
+IG_Wind <- gain_ratio(data$Wind, data$Efficiency)
+IG_Grass <- gain_ratio(data$Grass, data$Efficiency)
+IG_Turf <- gain_ratio(data$Turf, data$Efficiency)
+IG_Temp <- gain_ratio(data$Temp, data$Efficiency)
 ```
 
-
+##Mutual Information (MI) loading packages in
+```{r}
+install.packages("FSelectorRcpp")
+library(FSelectorRcpp)
+```
+##Running MI on only discrete data, omit height and weight as well
+```{r}
+MI_PlayerIDP <- mutinformation(data$PlayerIDP, data$Efficiency, method = "emp")
+MI_PlocID <- mutinformation(data$PLocID, data$Efficiency, method = "emp")
+MI_PlayerIDLS <- mutinformation(data$PlayerIDLS, data$Efficiency, method = "emp")
+MI_SnapLocID <- mutinformation(data$SnapLocID, data$Efficiency, method = "emp")
+MI_PDate <- mutinformation(data$PDate, data$Efficiency, method = "emp")
+#mutinformation(data$Snaptime, data$Efficiency, method = "emp") ##ommitted due to continuous
+#mutinformation(data$OP, data$Efficiency, method = "emp")       ##ommitted due to continuous
+#mutinformation(data$H2F, data$Efficiency, method = "emp")     ##ommitted due to continuous
+#mutinformation(data$Hang, data$Efficiency, method = "emp")
+MI_Distance <- mutinformation(data$Distance, data$Efficiency, method = "emp")
+MI_Practice <- mutinformation(data$Practice, data$Efficiency, method = "emp")
+MI_Game <- mutinformation(data$Game, data$Efficiency, method = "emp")
+MI_Wind <- mutinformation(data$Wind, data$Efficiency, method = "emp")
+MI_Grass <- mutinformation(data$Grass, data$Efficiency, method = "emp")
+MI_Turf <- mutinformation(data$Turf, data$Efficiency, method = "emp")
+```
 
 
