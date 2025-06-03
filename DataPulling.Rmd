@@ -156,6 +156,8 @@ ggplot(plot_data, aes(x = value, color = Type)) +
 
 
 ```{r}
-write.csv(df_norm, "~/Desktop/Personal/Football ML.csv", row.names = FALSE)
+write.csv(df_norm, "~/Desktop/Personal/Football ML.csv", row.names = FALSE) ##sending normalized data to desktop
+write.csv(df_after, "~/Desktop/Personal/Football ML.csv", row.names = FALSE) ##sending normalized and imputed data to desktop
+
 ```
 
