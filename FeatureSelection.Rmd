@@ -20,6 +20,7 @@ library(funModeling)
 ##Load in data
 ```{r}
 data <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataPulled.csv")
+data_norm <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataFinal.csv")
 ```
 
 ##Run Information Gain Ratio, omit height and weight
@@ -68,4 +69,62 @@ MI_Grass <- mutinformation(data$Grass, data$Efficiency, method = "emp")
 MI_Turf <- mutinformation(data$Turf, data$Efficiency, method = "emp")
 ```
 
+##Installing Chi-Squared packages
+```{r}
+install.packages("MASS")
+library(MASS)
+```
+```{r}
+summary(data$Game)
+```
+
+
+##Creating Contingency Tables
+```{r}
+##Creates Bins for Distance Feature
+summary(data$Distance)
+data$DistanceCat <- cut (
+  data$Distance, 
+  breaks = c(-Inf, 37, 46, Inf),
+  labels = c("Short", "Medium", "Long"),
+  right = TRUE
+)
+## Contingency Table for Distance and Effiency
+dist = data.frame(data$DistanceCat, data$Efficiency)
+dist = table(data$DistanceCat, data$Efficiency)
+print(dist)
+
+## Game Bins
+data$GameCat <- cut (
+  data$Game,
+  breaks = c(-Inf, 1, 4, Inf),
+  labels = c("Practice", "Non-Conference", "Conference"),
+  right = TRUE
+)
+
+##Contingency Table For Game and Effiency
+
+game = data.frame (data$GameCat, data$Efficiency)
+game = table(data$GameCat, data$Efficiency)
+print(game)
+
+##Grass Bins
+
+
+
+
+```
+##Applying Chi2
+```{r}
+DistanceChi <- print(chisq.test(dist))
+GameChi <- print(chisq.test(game))
+```
+##Visualizing Chi2
+```{r}
+barplot(dist, beside = TRUE, col = c("orange", "green"),
+        main = "Distance vs Effiency",
+        xlab = "Effiency",
+        ylab = "Number")
+legend("center", legend = rownames(dist), fill = c("orange", "green"))
+```
 
