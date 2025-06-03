@@ -84,7 +84,7 @@ head(df_norm)
 view(df_norm)
 ```
 
-##Missing Value Imputation and Comparison Before and After
+##Imputing Missing Values with Median
 ```{r}
 sum(is.na(df_norm))
 colSums(is.na(df_norm))
@@ -95,9 +95,39 @@ impute_median <- function(x){
 }
 df_after <- as.data.frame(lapply(df_norm, impute_median))
 
+```
 
+```{r}
+df_data <- df_data[,-1]
 
-##Plotting
+library(reshape2)
+library(ggplot2)
+
+# Select numeric column names
+numeric_cols <- names(df_data)[sapply(df_data, is.numeric)]
+
+# Prepare data for plotting density before and after imputation
+plot_data_before <- melt(df_data[, numeric_cols])
+plot_data_after <- melt(df_norm[, numeric_cols])
+
+plot_data_before$Type <- "Raw Data"
+plot_data_after$Type <- "Normalized"
+
+plot_data <- rbind(plot_data_before, plot_data_after)
+
+# Plot
+ggplot(plot_data, aes(x = value, color = Type)) +
+  geom_density() +
+  facet_wrap(~variable, scales = "free") +
+  labs(title = "Density Plot Before and After Normalization",
+       x = "Value",
+       y = "Density") +
+  theme_minimal()
+
+```
+
+```{r}
+##Plotting Before VS After Imputation
 
 # Select numeric columns only
 numeric_cols <- sapply(df_norm, is.numeric)
@@ -120,6 +150,10 @@ ggplot(plot_data, aes(x = value, color = Type)) +
   theme_minimal()
 
 ```
+
+
+
+
 
 ```{r}
 write.csv(df_norm, "~/Desktop/Personal/Football ML.csv", row.names = FALSE)
