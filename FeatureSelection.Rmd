@@ -75,7 +75,8 @@ install.packages("MASS")
 library(MASS)
 ```
 ```{r}
-summary(data$H2F)
+data$PDate
+summary(data$PDate)
 ```
 
 
@@ -137,6 +138,33 @@ H2F = data.frame(data$H2FCat, data$Efficiency)
 H2F = table(data$H2FCat, data$Efficiency)
 print(H2F)
 
+
+##Hang Bins
+data$HangCat <- cut (
+  data$Hang,
+  breaks = c(-Inf, 3.22, 3.9, 4.530),
+  labels = c("Poor", "Average", "Great"),
+  right = TRUE
+)
+
+##Hang Contingency Table
+Hang = data.frame(data$HangCat, data$Efficiency)
+Hang = table(data$HangCat, data$Efficiency)
+print(Hang)
+
+##Op Bins
+data$OPCat <- cut (
+  data$OP,
+  breaks = c(-Inf, 1.970, 2.18, 2.680),
+  labels = c("Great", "Average", "Poor")
+)
+##OP Table
+OP = data.frame(data$OPCat, data$Efficiency)
+OP = table(data$OPCat, data$Efficiency)
+print(OP)
+
+
+
 ```
 ##Applying Chi2
 ```{r}
@@ -144,6 +172,8 @@ DistanceChi <- print(chisq.test(dist)) ## test for dist
 GameChi <- print(chisq.test(game)) ##test for game
 GrassChi <- print(chisq.test(grass)) ##Test for grass
 H2FChi <- print(chisq.test(H2F)) ## test for hand to foot
+HangChi <- print(chisq.test(Hang)) ## test for Hang
+OPChi <- print(chisq.test(OP)) ##test for OP
 ```
 ##Visualizing Chi2
 ```{r}
