@@ -8,3 +8,45 @@ date: "2025-06-03"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+##Feature Selection Methods going to use: Information Gain, Mutual Information, Chi-Squared, Fisher's Score, Pearson's Correlation Coefficient (R), Variance Threshold
+#Start with 20 features maybe eliminate down to like top 10 then once have that can design experiment
+
+##Information Gain
+```{r}
+install.packages("funModeling")
+library(funModeling)
+```
+
+
+##Load in data
+```{r}
+data <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataFinal.csv")
+```
+
+##Run Information Gain Ratio
+
+```{r}
+gain_ratio(data$PlayerIDP, data$Efficiency)
+gain_ratio(data$PLocID, data$Efficiency)
+gain_ratio(data$PlayerIDLS, data$Efficiency)
+gain_ratio(data$SnapLocID, data$Efficiency)
+gain_ratio(data$PDate, data$Efficiency)
+gain_ratio(data$Snaptime, data$Efficiency)
+gain_ratio(data$OP, data$Efficiency)
+gain_ratio(data$H2F, data$Efficiency)
+gain_ratio(data$Hang, data$Efficiency)
+gain_ratio(data$Distance, data$Efficiency)
+gain_ratio(data$Height, data$Efficiency)
+gain_ratio(data$Weight, data$Efficiency)
+gain_ratio(data$Practice, data$Efficiency)
+gain_ratio(data$Game, data$Efficiency)
+gain_ratio(data$precipitation, data$Efficiency)
+gain_ratio(data$Wind, data$Efficiency)
+gain_ratio(data$Grass, data$Efficiency)
+gain_ratio(data$Turf, data$Efficiency)
+gain_ratio(data$Temp, data$Efficiency)
+```
+
+
+
+
