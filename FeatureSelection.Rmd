@@ -371,3 +371,22 @@ barplot(dist, beside = TRUE, col = c("orange", "green"),
 legend("center", legend = rownames(dist), fill = c("orange", "green"))
 ```
 
+##Fisher's Score
+
+##Installing Packages for Fisher Score
+
+
+```{r}
+install.packages("Rdimtools")
+library(Rdimtools)
+```
+##Preforming Fisher
+```{r}
+data_final <- read.csv("PuntDataFinal.csv")
+do.fscore(dat)
+```
+
+
+
+
+
