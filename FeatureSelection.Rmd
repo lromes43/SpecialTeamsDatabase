@@ -371,20 +371,93 @@ barplot(dist, beside = TRUE, col = c("orange", "green"),
 legend("center", legend = rownames(dist), fill = c("orange", "green"))
 ```
 
-##Fisher's Score
+##Fisher Information
 
-##Installing Packages for Fisher Score
+```{r}
+##Getting Variance
+
+PlocIDVar <- var(data_norm$PLocID)
+print(PlocIDVar)
+
+
+SnapLocIDVar <- var(data_norm$SnapLocID)
+print(SnapLocIDVar)
+
+PDateVar <- var(data_norm$PDate)
+print(PDateVar)
+
+SnaptimeVar <- var(data_norm$Snaptime)
+print(SnaptimeVar)
+
+OPVar <- var(data_norm$OP)
+print(OPVar)
+
+H2FVar <- var(data_norm$H2F)
+print(H2FVar)
+
+HangVar <- var(data_norm$Hang)
+print(HangVar)
+
+DistanceVar <- var(data_norm$Distance)
+print(DistanceVar)
+
+PrecipitationVar <- var(data_norm$precipitation)
+print(PrecipitationVar)
+
+WindVar <- var(data_norm$Wind)
+print(WindVar)
+
+TempVar <- var(data_norm$Temp)
+print(TempVar)
+
+
+```
+
+##Fisher Score Calculation
+```{r}
+
+fisher_score_manual <- function(X, y) {
+  classes <- unique(y)
+  if (length(classes) != 2) stop("Only supports binary classification")
+  
+  scores <- sapply(X, function(feature) {
+    class1 <- feature[y == classes[1]]
+    class2 <- feature[y == classes[2]]
+    
+    mean_diff <- abs(mean(class1, na.rm = TRUE) - mean(class2, na.rm = TRUE))
+    var1 <- var(class1, na.rm = TRUE)
+    var2 <- var(class2, na.rm = TRUE)
+    var_sum <- var1 + var2
+    
+    if (is.na(var_sum) || var_sum == 0) {
+      return(0)
+    } else {
+      return((mean_diff^2) / var_sum)
+    }
+  })
+  
+  sort(scores, decreasing = TRUE)
+}
+
+```
 
 
 ```{r}
-install.packages("Rdimtools")
-library(Rdimtools)
+# Ensure target is a factor with 2 levels
+data_norm$Efficiency <- as.factor(data_norm$Efficiency)
+
+# Drop target column from features
+X <- data_norm[, setdiff(names(data_norm), "Efficiency")]
+y <- data_norm$Efficiency
+
+# Run
+fisher_scores <- fisher_score_manual(X, y)
+print(fisher_scores)
+
+
 ```
-##Preforming Fisher
-```{r}
-data_final <- read.csv("PuntDataFinal.csv")
-do.fscore(dat)
-```
+
+
 
 
 
