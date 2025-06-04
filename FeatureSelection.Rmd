@@ -49,6 +49,8 @@ IG_Temp <- gain_ratio(data$Temp, data$Efficiency)
 ```{r}
 install.packages("FSelectorRcpp")
 library(FSelectorRcpp)
+install.packages ("infotheo")
+library(infotheo)
 ```
 ##Running MI on only discrete data, omit height and weight as well
 ```{r}
@@ -75,8 +77,8 @@ install.packages("MASS")
 library(MASS)
 ```
 ```{r}
-data$PDate
-summary(data$PDate)
+
+summary(data$precipitation)
 ```
 
 
@@ -156,13 +158,187 @@ print(Hang)
 data$OPCat <- cut (
   data$OP,
   breaks = c(-Inf, 1.970, 2.18, 2.680),
-  labels = c("Great", "Average", "Poor")
+  labels = c("Great", "Average", "Poor"),
+  right = TRUE
 )
 ##OP Table
 OP = data.frame(data$OPCat, data$Efficiency)
 OP = table(data$OPCat, data$Efficiency)
 print(OP)
 
+##PlayerIDLS Bins
+
+data$PlayerIDLSCat <- cut (
+  data$PlayerIDLS,
+  breaks = c(-Inf, 41, 44, 58, 98),
+  labels = c("Gus", "Charlie", "Rob", "Bryce"),
+  right = TRUE
+)
+
+##PlayerIDLS Table
+
+PlayerIDLS = data.frame(data$PlayerIDLSCat, data$Efficiency)
+PlayerIDLS = table(data$PlayerIDLSCat, data$Efficiency)
+print(PlayerIDLS)
+
+##PlayerIDP
+data$PlayerIDPCat <- cut (
+  data$PlayerIDP,
+  breaks = c(-Inf, 61, 96),
+  labels = c("Charlie", "Josh"),
+  right = TRUE
+)
+
+##PlayerIDP Table
+
+PlayerIDP = data.frame(data$PlayerIDPCat, data$Efficiency)
+PlayerIDP = table(data$PlayerIDPCat, data$Efficiency)
+print(PlayerIDP)
+
+##PLocID Bins
+
+data$PLocIDCat <- cut (
+  data$PLocID,
+  breaks = c(-Inf, 1, 2, 3),
+  labels = c("Poor", "Average", "Great"),
+  right = TRUE
+)
+
+##PLocID Table
+
+PLocID = data.frame(data$PLocIDCat, data$Efficiency)
+PLocID = table(data$PLocIDCat, data$Efficiency)
+print(PLocID)
+
+
+##Practice Bins
+
+data$PracticeCat <- cut (
+  data$Practice,
+  breaks = c(-Inf, 0, 1),
+  labels = c("Game", "Practice"),
+  right = TRUE
+)
+
+##Practice Table
+
+Practice = data.frame(data$PracticeCat, data$Efficiency)
+Practice = table(data$PracticeCat, data$Efficiency)
+print(Practice)
+
+##SnapLocID Bins
+
+data$SnapLocIDCat <- cut (
+  data$SnapLocID,
+  breaks = c(-Inf, 1, 2, 3),
+  labels = c("Poor", "Average", "Great"),
+  right = TRUE
+  
+)
+
+##SnapLocID Table
+
+SnapLocID = data.frame(data$SnapLocIDCat, data$Efficiency)
+SnapLocID = table(data$SnapLocIDCat, data$Efficiency)
+print(SnapLocID)
+
+##Turf Bins
+
+data$TurfCat <- cut (
+  data$Practice,
+  breaks = c(-Inf, 0, 1),
+  labels = c("Grass", "Turf"),
+  right = TRUE
+)
+
+## Turf Table
+
+Turf = data.frame(data$TurfCat, data$Efficiency)
+Turf = table(data$TurfCat, data$Efficiency)
+print(Turf)
+
+##Wind Bins
+
+data$WindCat <- cut (
+  data$Wind,
+  breaks = c(-Inf, 10, 15, Inf),
+  labels = c("Low", "Average", "High"),
+  right = TRUE
+)
+
+##Wind Table
+
+Wind = data.frame(data$WindCat, data$Efficiency)
+Wind = table(data$WindCat, data$Efficiency)
+print(Wind)
+
+##Temp Bins
+
+data$TempCat <- cut (
+  data$Temp,
+  breaks = c(-Inf, 52.79,66.33, Inf),
+  labels = c("Cool", "Average", "Warm"),
+  right = TRUE
+)
+
+Temp = data.frame(data$TempCat, data$Efficiency)
+Temp = table(data$TempCat, data$Efficiency)
+print(Temp)
+
+##Snaptime Bins
+
+data$SnaptimeCat <- cut (
+  data$Snaptime,
+  breaks = c(-Inf, .7, .78, Inf),
+  labels = c("Great", "Average", "Poor"),
+  right = TRUE
+)
+
+##Snaptime Table
+
+Snaptime = data.frame(data$SnaptimeCat, data$Efficiency)
+Snaptime = table(data$SnaptimeCat, data$Efficiency)
+print(Snaptime)
+
+
+##Precipitation Bins
+
+data$precipitationCat <- cut (
+  data$precipitation,
+  breaks = c(-Inf, 0.1, .1764, 2),
+  labels = c("Low", "Medium", "High"),
+  right = TRUE
+)
+
+##Precipitation Table
+
+Precipitation = data.frame(data$precipitationCat, data$Efficiency)
+Precipitation = table(data$precipitationCat, data$Efficiency)
+print(Precipitation)
+
+
+
+
+
+##Date Conversion
+
+data$PDate <- as.Date(data$PDate)
+reference_date <- as.Date("2024-08-01")
+data$DaysSinceAug1 <- as.numeric(data$PDate - reference_date)
+
+summary(data$DaysSinceAug1)
+
+##Date Bins
+
+data$DaysSinceAug1Cat <- cut (
+  data$DaysSinceAug1,
+  breaks = c(-Inf, 29, 51,Inf),
+  labels = c("PreSeason", "NonConference", "Conference")
+)
+
+DaysSinceAug1 <- data.frame(data$DaysSinceAug1Cat, data$Efficiency)
+DaysSinceAug1 <- table(data$DaysSinceAug1Cat, data$Efficiency)
+print(DaysSinceAug1)
 
 
 ```
@@ -174,6 +350,17 @@ GrassChi <- print(chisq.test(grass)) ##Test for grass
 H2FChi <- print(chisq.test(H2F)) ## test for hand to foot
 HangChi <- print(chisq.test(Hang)) ## test for Hang
 OPChi <- print(chisq.test(OP)) ##test for OP
+PlayerIDLSChi <- print(chisq.test(PlayerIDLS)) ##test for PlayerIDLS
+PlayerIDPChi <- print(chisq.test(PlayerIDP)) ##test for PlayerIDP
+PLocIDChi <- print(chisq.test(PLocID)) ##test for PLocID
+PracticeChi <- print(chisq.test(Practice)) ##test for Practice
+SnapLocIDChi <- print(chisq.test(SnapLocID)) ##test for SnapLocID
+TurfChi <- print(chisq.test(Turf)) ##test for Turf
+WindChi <- print(chisq.test(Wind)) ##test for Wind
+TempChi <- print(chisq.test(Temp)) ##test for Temp
+SnaptimeChi <- print(chisq.test(Snaptime)) ##test for Snaptime
+PrecipitationChi <- print(chisq.test(Precipitation)) ##test for Precipitation
+DateChi <- print(chisq.test(DaysSinceAug1)) ##Test for Date
 ```
 ##Visualizing Chi2
 ```{r}
