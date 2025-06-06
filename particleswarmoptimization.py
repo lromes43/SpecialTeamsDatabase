@@ -8,13 +8,22 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn import svm
 from sklearn.svm import SVC
 
+import niapy
+from niapy import problems
+from niapy import task
+from niapy import algorithms
+from niapy.algorithms import basic
+from niapy.algorithms.basic import ParticleSwarmAlgorithm
+
+##Packages
 
 
+##Loading Data in
 df = pd.read_csv('/Users/lukeromes/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataFinal.csv')
 
-print(df.head())
 
-#print(df.info)
+##Head of Dataframe
+print(df.head()) 
 
-#print(df.describe())
+
 
