@@ -467,6 +467,18 @@ cor.test(data_norm$Turf, data$Efficiency, method = "pearson")
 cor.test(data_norm$Wind, data$Efficiency, method = "pearson")
 ```
 
+##Variance Threshold
+
+##Caluclating Variance
+```{r}
+variances <- apply(data_norm, 2, var)
+print(variances)
+
+threshold <- 0.5
+selected_features <- names(variances[variances >= threshold])
+print(selected_features)
+```
+
 
 
 
