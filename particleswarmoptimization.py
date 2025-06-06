@@ -26,4 +26,8 @@ df = pd.read_csv('/Users/lukeromes/Desktop/Personal/Football ML/Football Data/Pu
 print(df.head()) 
 
 
+class SVMFeatureSelection (Problem):
+    def _init_(self, X_train, y_train, alpha = 0.99):
+        super(). _init_ (dimension = X_train.shape[1], lower = 0, upper = 1)
+        self.X_train 
 
