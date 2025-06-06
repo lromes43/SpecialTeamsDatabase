@@ -480,8 +480,78 @@ print(selected_features)
 ```
 
 
+##Particle Swarm Optimization
+
+##Pso Packages
+```{r}
+install.packages("metaheuristicOpt")
+install.packages("caret")
+install.packages("e1071")  # for SVM
+library(metaheuristicOpt)
+library(caret)
+library(e1071)
+
+```
+##Pso Data
+```{r}
+dim(data_norm)
+X <- data_norm[, -11]
+y <- as.factor(data_norm[,11])
+```
+
+```{r}
+install.packages("metaheuristicOpt")  # Run this line if not installed
+library(metaheuristicOpt)             # Load the package
+
+```
 
 
+##Fitness Function
+```{r}
+fs_fitness <- function(solution) {
+  solution <- round(solution)  # <-- right here, at the start
+
+  if (sum(solution) == 0) 
+    return(1)
+
+  selected <- which(solution == 1)
+  X_selected <- X[, selected, drop = FALSE]
+
+  ctrl <- trainControl(method = "cv", number = 5)
+
+  model <- tryCatch({
+    train(x = X_selected, y = y, method = "svmRadial", trControl = ctrl)
+  }, error = function(e) return(NULL))
+
+  if (is.null(model)) return(1)
+
+  return(1 - max(model$results$Accuracy))  # minimize error
+}
 
 
+```
+
+##Run PSO
+```{r}
+res <- PSO(
+  FUN = fs_fitness,
+  optimType = "MIN",
+  numVar = num_features,
+  numPopulation = 20,
+  maxIter = 30,
+  rangeVar = matrix(c(0, 1), nrow = 2)
+)
+
+
+```
+
+```{r}
+ls("package:metaheuristicOpt")
+
+```
+```{r}
+best_solution <- round(res$bestVar)  # round to get binary 0/1 vector
+selected_features <- which(best_solution == 1)
+
+```
 
