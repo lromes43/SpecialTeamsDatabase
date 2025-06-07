@@ -54,7 +54,7 @@ task_instance = Task(problem=problem, max_iters=100)
 algorithm = ParticleSwarmAlgorithm(population_size=10, seed=1234)
 best_features, best_fitness = algorithm.run(task_instance)
 
-selected_features = best_features > 0.5
+selected_features = best_features > 0.33
 print('Number of selected features:', selected_features.sum())
 print('Selected features:', ', '.join(feature_names[selected_features]))
 
@@ -67,4 +67,7 @@ print('Subset accuracy:', model_selected.score(X_test[:, selected_features], y_t
 model_all = SVC()
 model_all.fit(X_train, y_train)
 print('All Features Accuracy:', model_all.score(X_test, y_test))
+
+
+##Plot value of best score vs subset accuracy 
 
