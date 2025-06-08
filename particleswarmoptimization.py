@@ -54,20 +54,56 @@ task_instance = Task(problem=problem, max_iters=100)
 algorithm = ParticleSwarmAlgorithm(population_size=10, seed=1234)
 best_features, best_fitness = algorithm.run(task_instance)
 
-selected_features = best_features > 0.33
-print('Number of selected features:', selected_features.sum())
-print('Selected features:', ', '.join(feature_names[selected_features]))
+best_threshold = 0
+best_subset_accuracy = 0
+best_selected_mask = None
 
-# Train and evaluate on selected features
-model_selected = SVC()
-model_selected.fit(X_train[:, selected_features], y_train)
-print('Subset accuracy:', model_selected.score(X_test[:, selected_features], y_test))
+for threshold in np.arange(0.0, 2.6, 0.1):
+    selected_mask = best_features > threshold
+    if selected_mask.sum() == 0:
+        continue  # Skip if no features are selected
 
-# Train and evaluate on all features
-model_all = SVC()
-model_all.fit(X_train, y_train)
-print('All Features Accuracy:', model_all.score(X_test, y_test))
+    model = SVC()
+    model.fit(X_train[:, selected_mask], y_train)
+    acc = model.score(X_test[:, selected_mask], y_test)
+
+    print(f"Threshold: {round(threshold, 1)} | Features: {selected_mask.sum()} | Accuracy: {acc:.4f}")
+
+    if acc > best_subset_accuracy:
+        best_subset_accuracy = acc
+        best_threshold = threshold
+        best_selected_mask = selected_mask
+
+print("\nBest Threshold:", round(best_threshold, 2))
+print("Subset Accuracy:", best_subset_accuracy)
+print("Selected Features:", ', '.join(feature_names[best_selected_mask]))
 
 
-##Plot value of best score vs subset accuracy 
+import matplotlib.pyplot as plt
+
+thresholds = []
+accuracies = []
+
+for threshold in np.arange(0.0, 2.6, 0.1):
+    selected_mask = best_features > threshold
+    if selected_mask.sum() == 0:
+        continue
+
+    model = SVC()
+    model.fit(X_train[:, selected_mask], y_train)
+    acc = model.score(X_test[:, selected_mask], y_test)
+
+    thresholds.append(threshold)
+    accuracies.append(acc)
+
+plt.plot(thresholds, accuracies, marker='o')
+plt.xlabel('Threshold')
+plt.ylabel('Accuracy')
+plt.title('Threshold vs. Accuracy for Selected Features')
+plt.grid(True)
+plt.show()
+
+
+
+
 
