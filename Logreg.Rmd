@@ -1,0 +1,48 @@
+---
+title: "LogRegression"
+output: html_document
+date: "2025-06-09"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("dplyr")
+library(dplyr)
+install.packages("caTools")
+library("caTools")
+
+
+```
+
+```{r}
+data <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataFinal.csv")
+head(data)
+```
+
+##Splitting Data
+```{r}
+split <- sample.split(data$Efficiency, SplitRatio = 0.8)
+
+train_reg <- data[split, ]
+test_reg <- data[!split, ]
+
+```
+
+
+##Building Model
+
+```{r}
+logistic_model <- glm(Efficiency ~ PLocID + Snaptime + Distance + Practice + precipitation + Wind + Temp,
+                      data = train_reg,
+                      family = "binomial")
+
+logistic_model
+summary((logistic_model))
+```
+```{r}
+colnames(data)
+```
+

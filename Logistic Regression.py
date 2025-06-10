@@ -6,9 +6,12 @@ import sklearn
 from sklearn import linear_model 
 from sklearn import metrics
 from sklearn import model_selection
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, log_loss
 import time
+import matplotlib.pyplot as plt
 
 
 
@@ -41,7 +44,7 @@ print(y.shape)
 #Using LogisticRegression() method to create logistic regression object
 #Object has method called fit() that takes the independent and dependent values as parameters and fills the regression object with data that describes the relarionship
 
-logr = linear_model.LogisticRegression()
+logr = linear_model.LogisticRegression(max_iter=1000)
 logr.fit(X, y)
 
 ##Predict 
@@ -68,6 +71,7 @@ print(odds)
 #create function that uses the models coefficent and intercept values to return a new values
 #new value represents probability of efficiency
 
+start = time.process_time() #time before
 def logit2prob (logr, x):
     log_odds = X.values @ logr.coef_.T + logr.intercept_
     odds = np.exp(log_odds)
@@ -79,23 +83,45 @@ print(logit2prob(logr, X))
 
 ##Metrics
 
+##splits data into 90% training (x_train, y_train)
+##10% test(x_test, y_test)
+###random state ensures same split
+#42 for first run of each %, 43 for rest
+#change test size based on runs
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .3, random_state = 43) 
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .1, random_state = 42)
-
-
+##fits the logistic regression model to training set
 logr.fit(X_train, y_train)
 
+##Predicted Probabilities
+#predict_proba returns prob of each class
+#[;, 0] = prob of class 0
+#[;, 1] = prob of class 1
+#doing 1 bc seeing how well can do it
 y_prob = logr.predict_proba(X_test)[:, 1]
 
+
+##Converting Probabilities to class predictions
+#if predicted prob greater or equal .5 predict 1, else do 0
 y_pred = (y_prob >= 0.5).astype(int)
 
 # Calculate metrics
-accuracy = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
-roc_auc = roc_auc_score(y_test, y_prob)
-logloss = log_loss(y_test, y_prob)
+accuracy = accuracy_score(y_test, y_pred) #% total correct predictions
+precision = precision_score(y_test, y_pred) #of all predicted 1s, how many were correct
+recall = recall_score(y_test, y_pred) #of all actual 1s, how many did we catch
+f1 = f1_score(y_test, y_pred) #harmonic mean of precision and recall
+roc_auc = roc_auc_score(y_test, y_prob) #how well model separates two classes overall
+logloss = log_loss(y_test, y_prob) #penalizes incorrect more heaving, lower better
+end = time.process_time() # time after
+CPU = end - start
+CVScores = cross_val_score(logr, X, y, cv = 5, scoring = 'accuracy')
+##Confusion Matrix
+confusion_matrix = metrics.confusion_matrix(y_test, y_pred)
+cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_labels = [0, 1])
+
+#Displaying matrix
+cm_display.plot()
+plt.show()
 
 print(f"Accuracy: {accuracy:.4f}")
 print(f"Precision: {precision:.4f}")
@@ -103,7 +129,11 @@ print(f"Recall: {recall:.4f}")
 print(f"F1 Score: {f1:.4f}")
 print(f"ROC AUC: {roc_auc:.4f}")
 print(f"Log Loss: {logloss:.4f}")
+print(f"CPU Time: {CPU: .4f}")
 
+print(f"Cross Val Accuacy scores: {CVScores}")
+print(f"Mean CV accuacy: {np.mean(CVScores)}")
+print(f"St Dev CV: {np.std(CVScores)}")
 
 from collections import Counter
 print(Counter(y))
