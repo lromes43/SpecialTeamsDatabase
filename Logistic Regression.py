@@ -28,18 +28,34 @@ print(missing)
 dimensions = data.shape
 print(dimensions)
 
+##Getting Names of Columns
+
+column_names = data.columns.to_list()
+print("Original columns:", data.columns.to_list())
+
+##Changing column order
+new_order = ['Efficiency', 'PLocID', 'Snaptime', 'Distance', 'Practice',
+             'precipitation', 'Wind', 'Temp', 'H2F', 'PlayerIDLS', 'OP',
+             'PDate', 'Hang', 'SnapLocID', 'Turf', 'Game', 'Grass', 'PlayerIDP']
+
+# Apply reorder
+data = data[new_order]
+
+# Confirm final structure
+print(data.shape)  # Should be (331, 18)
+print("Reordered columns:", data.columns.to_list())
+
 ##Defining Variables
-exclude_cols = [11, 12, 13]
+exclude_cols = [0,6,7,8,9, 10,11, 12, 13, 14, 15, 16, 17]
 include_cols = [i for i in range(data.shape[1]) if i not in exclude_cols]
 X = data.iloc[:, include_cols]
 print(X)
 print(X.shape)
 
-y = data.iloc[:, 10]  
+y = data.iloc[:, 0]  
 y = y.values
 print(y)
 print(y.shape)
-
 
 #Using LogisticRegression() method to create logistic regression object
 #Object has method called fit() that takes the independent and dependent values as parameters and fills the regression object with data that describes the relarionship
@@ -49,11 +65,11 @@ logr.fit(X, y)
 
 ##Predict 
 
-new_sample = np.array([96, 1, 58, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0])
-new_sample = new_sample.reshape(1, -11)
+new_sample = np.array([0, 0, 0, 0, 0])
+new_sample = new_sample.reshape(1, 5)
 
-predicted = logr.predict(new_sample)
-print(predicted)
+##predicted = logr.predict(new_sample)
+##print(predicted)
 
 
 ##Coefficient
@@ -86,9 +102,9 @@ print(logit2prob(logr, X))
 ##splits data into 90% training (x_train, y_train)
 ##10% test(x_test, y_test)
 ###random state ensures same split
-#42 for first run of each %, 43 for rest
+#42 for odd, 43 for even
 #change test size based on runs
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .3, random_state = 43) 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .3, random_state = 42) 
 
 ##fits the logistic regression model to training set
 logr.fit(X_train, y_train)
@@ -99,6 +115,7 @@ logr.fit(X_train, y_train)
 #[;, 1] = prob of class 1
 #doing 1 bc seeing how well can do it
 y_prob = logr.predict_proba(X_test)[:, 1]
+
 
 
 ##Converting Probabilities to class predictions
@@ -119,9 +136,12 @@ CVScores = cross_val_score(logr, X, y, cv = 5, scoring = 'accuracy')
 confusion_matrix = metrics.confusion_matrix(y_test, y_pred)
 cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_labels = [0, 1])
 
+
+
 #Displaying matrix
 cm_display.plot()
 plt.show()
+
 
 print(f"Accuracy: {accuracy:.4f}")
 print(f"Precision: {precision:.4f}")
@@ -138,5 +158,12 @@ print(f"St Dev CV: {np.std(CVScores)}")
 from collections import Counter
 print(Counter(y))
 print(Counter(y_test))
+
+
+
+
+print(X.columns.to_list()[:5])
+
+
 
 
