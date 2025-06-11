@@ -16,6 +16,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, log_loss
+from sklearn.model_selection import cross_val_score
+
 
 
 ##Loading Dataset in
@@ -101,6 +104,8 @@ grid_search.fit(X_train, y_train)
 print("best accuracy", grid_search.best_score_)
 print(grid_search.best_estimator_)
 
+tree_clf = grid_search.best_estimator_
+
 end = time.process_time() # time after
 CPU = end - start
 
@@ -120,3 +125,48 @@ plt.title("Decision Tree Viz")
 plt.show()
 
 print(f"CPU Time: {CPU: .4f}")
+
+y_prob = tree_clf.predict_proba(X_test)[:, 1]
+
+
+##Metrics 
+
+accuracy = accuracy_score(y_test, y_pred) #% total correct predictions
+precision = precision_score(y_test, y_pred) #of all predicted 1s, how many were correct
+recall = recall_score(y_test, y_pred) #of all actual 1s, how many did we catch
+f1 = f1_score(y_test, y_pred) #harmonic mean of precision and recall
+roc_auc = roc_auc_score(y_test, y_prob) #how well model separates two classes overall
+logloss = log_loss(y_test, y_prob) #penalizes incorrect more heaving, lower better
+end = time.process_time() # time after
+CPU = end - start
+CVScores = cross_val_score(tree_clf, X, y, cv = 5, scoring = 'accuracy')
+##Confusion Matrix
+confusion_matrix = metrics.confusion_matrix(y_test, y_pred)
+cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_labels = [0, 1])
+
+
+
+#Displaying matrix
+cm_display.plot()
+plt.show()
+
+
+print(f"Accuracy: {accuracy:.4f}")
+print(f"Precision: {precision:.4f}")
+print(f"Recall: {recall:.4f}")
+print(f"F1 Score: {f1:.4f}")
+print(f"ROC AUC: {roc_auc:.4f}")
+print(f"Log Loss: {logloss:.4f}")
+print(f"CPU Time: {CPU: .4f}")
+
+print(f"Cross Val Accuacy scores: {CVScores}")
+print(f"Mean CV accuacy: {np.mean(CVScores)}")
+print(f"St Dev CV: {np.std(CVScores)}")
+
+from collections import Counter
+print(Counter(y))
+print(Counter(y_test))
+
+
+
+
