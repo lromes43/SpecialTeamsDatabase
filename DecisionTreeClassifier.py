@@ -51,7 +51,7 @@ print("Reordered columns:", data.columns.to_list())
 
 ##Defining Variables
 
-exclude_cols = [0,6,7,8,9,10,11,12,13,14,15,16,17]
+exclude_cols = [0,17]
 include_cols = [i for i in range(data.shape[1]) if i not in exclude_cols]
 X = data.iloc[:, include_cols]
 print(X.columns.to_list())
@@ -64,7 +64,7 @@ print(y)
 ##Spitting Dataset
 #use train_test_split method from sklearn.model_selection to split the dataset into training and testing sets
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size= 0.3, random_state=43)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size= 0.2, random_state=42)
 
 
 ##Defining Model
