@@ -11,13 +11,23 @@
 #Dual Problem: involves solving for lagrange multipliers associated with support vectors, facilitating the kernel trick and efficient computation
 
 import sklearn
-import matplotlib as plt
+import matplotlib 
+from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
 from sklearn import inspection
 from sklearn import svm
+from sklearn import model_selection
+from sklearn import metrics
+from sklearn.metrics import log_loss
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
 from sklearn.inspection import DecisionBoundaryDisplay
 from sklearn.svm import SVC
+import time
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, log_loss
+
 
 data = pd.read_csv('/Users/lukeromes/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataFinal.csv')
 
@@ -54,14 +64,60 @@ X = data.iloc[:, include_cols]
 
 y = data.iloc[:, 0]  
 y = y.values
-#print(y)
+
+##Splitting Data for train and test
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size= 0.15, random_state= 42)
 
 ##Building the model 
-svm = SVC(kernel= "rbf", gamma= 0.5, c = 1)
+svm = SVC(C =1.0, kernel= "rbf", gamma= 0.5, probability= True)
 
+start = time.process_time()
 #train the model
-svm.fit(X,y)
+svm.fit(X_train, y_train)
 
+
+##Predictions
+y_pred = svm.predict(X_test)
+y_prob = svm.predict_proba(X_test)
+
+
+##TIme
+end = time.process_time() # time after
+CPU = end - start
+
+
+
+
+##Confusion Matrix
+
+
+
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix= cm, display_labels= svm.classes_)
+disp.plot(cmap=plt.cm.Blues)
+plt.title ("confusion matrix")
+plt.show()
+
+##Log Loss
+LogLoss = log_loss(y_test, y_prob)
+print("Log Loss", LogLoss)
+
+##Cross Validation Scores
+from sklearn.model_selection import cross_val_score
+
+cv_accuracy = cross_val_score(svm, X, y, cv=5, scoring='accuracy')
+roc_auc = roc_auc_score(y_test, y_prob[:, 1])
+print("=== 5-Fold Cross-Validation Accuracy Scores ===")
+print("Scores:", cv_accuracy)
+print("Mean Accuracy:", np.mean(cv_accuracy))
+print("Std Dev:", np.std(cv_accuracy))
+print(f"CPU Time: {CPU: .4f}")
+print("Log Loss", LogLoss)
+print(f"ROC AUC: {roc_auc:.4f}")
+
+
+
+'''
 ##Plot Decision Boundary
 DecisionBoundaryDisplay.from_estimator(
     svm,
@@ -79,3 +135,4 @@ plt.scatter(X[:, 0], X[:, 1],
             c=y, 
             s=20, edgecolors="k")
 plt.show()
+'''
