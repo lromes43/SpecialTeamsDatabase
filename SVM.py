@@ -57,7 +57,7 @@ print(data.shape)
 print("Reordered columns:", data.columns.to_list())
 
 ##Defining Variables
-exclude_cols = [0]
+exclude_cols = [0,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
 include_cols = [i for i in range(data.shape[1]) if i not in exclude_cols]
 X = data.iloc[:, include_cols]
 #print(X.columns.to_list())

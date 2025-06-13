@@ -65,6 +65,7 @@ logr.fit(X, y)
 
 ##Predict 
 
+
 new_sample = np.array([0, 0, 0])
 new_sample = new_sample.reshape(1, 3)
 
@@ -120,6 +121,7 @@ y_prob = logr.predict_proba(X_test)[:, 1]
 
 ##Converting Probabilities to class predictions
 #if predicted prob greater or equal .5 predict 1, else do 0
+#based on sigmoid function
 y_pred = (y_prob >= 0.5).astype(int)
 
 # Calculate metrics
