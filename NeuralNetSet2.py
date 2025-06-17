@@ -1,4 +1,4 @@
-##Neural Net New
+##Neural Net Set 2
 ##Same original as Set 1 just need to change # of features then run test
 
 
