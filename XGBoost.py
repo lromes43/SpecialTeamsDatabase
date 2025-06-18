@@ -10,7 +10,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.inspection import DecisionBoundaryDisplay
 from sklearn.svm import SVC
 import time
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, log_loss
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, log_loss, roc_curve
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib
 from matplotlib import pyplot as plt
@@ -65,43 +65,53 @@ y = data.iloc[:, 0]
 #Separating Data
 start = time.process_time()
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.15, random_state=42)
 
-model = xgboost.XGBClassifier(use_label_encoder=False, eval_metric='logloss')
-model.fit(X_train, y_train)
-prediction = model.predict(X_test)
+xgb_clf = XGBClassifier(
+    n_estimators = 500,
+    learning_rate = 0.05,
+    use_label_encoder = False,
+    eval_metric = "logloss",
+    early_stopping_rounds = 5,
+    n_jobs = -1,
+    random_state = 42
+)
 
-y_pred  = model.predict(X_test)          # hard labels  0/1
-y_prob  = model.predict_proba(X_test)
+xgb_clf.fit(X_train, y_train,
+            eval_set=[(X_test, y_test)],
+            verbose=False)
 
 end = time.process_time() # time after
 CPU = end - start
 from sklearn.metrics import accuracy_score, classification_report
-accuracy = accuracy_score(y_test, prediction)
 
 
-print("Accuracy:", accuracy)
-print("\nClassification Report:")
-print(classification_report(y_test, prediction, target_names= ['Inefficient', 'Efficient']))
+pred_test = xgb_clf.predict(X_test)
+accuracy = accuracy_score(y_test, pred_test)
+test_score = accuracy_score(pred_test, y_test)
+print("Test Score: ", np.round(test_score, 2))
 
-
-cm = confusion_matrix(y_test, prediction)
-disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=[0, 1])
-disp.plot(cmap=plt.cm.Blues)
-plt.title("Confusion Matrix")
-plt.show()
-
-
-LogLoss = log_loss(y_test, prediction)
-roc_auc  = roc_auc_score(y_test, y_prob[:,1]) 
-print("Log Loss:", LogLoss)
-print(f"ROC AUC: {roc_auc:.4f}")
-
-
-cv_scores = cross_val_score(model, X, y, cv=5, scoring='accuracy')
-print("=== 5-Fold Cross-Validation Accuracy Scores ===")
-print("Scores:", cv_scores)
-print("Mean Accuracy:", np.mean(cv_scores))
-print("Std Dev:", np.std(cv_scores))
 print(f"CPU Time: {CPU:.4f} seconds")
 
+pred_train = xgb_clf.predict(X_train)
+train_score = accuracy_score(pred_train, y_train)
+print("Train Score: ", np.round(train_score, 2))
+
+
+logloss_test = log_loss(y_test, pred_test)
+print(f"Test Log Loss: {np.round(logloss_test, 4)}")
+
+cm = confusion_matrix(y_test, pred_test)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=xgb_clf.classes_) # Use xgb_clf.classes_ for labels
+disp.plot(cmap=plt.cm.Blues) # You can change the colormap
+plt.title('Confusion Matrix for XGBoost Classifier (Test Set)')
+plt.show() # Display the plot
+
+
+
+'''
+fpr, tpr, thresholds = roc_curve(y, pred_test)
+auc_score = roc_auc_score(y, pred_test)
+print(f"Area Under the Curve (AUC): {auc_score:.3f}")
+
+'''
