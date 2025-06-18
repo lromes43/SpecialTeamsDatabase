@@ -67,7 +67,6 @@ start = time.process_time()
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.15, random_state=42)
 
 xgb_clf = XGBClassifier(
-    n_estimators = 500,
     learning_rate = 0.05,
     use_label_encoder = False,
     eval_metric = "logloss",
