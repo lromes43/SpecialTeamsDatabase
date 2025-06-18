@@ -1,3 +1,5 @@
+##XGBoostSet3
+
 import pandas as pd
 import numpy as np
 import sklearn
@@ -48,8 +50,8 @@ data = data[new_order]
 print(data.shape)
 print("Reordered columns:", data.columns.to_list())
 
-##Defining Variables
 
+exclude_cols = [0,8,9,10,11,12,13,15,15,16,17] # This refers to 'Efficiency' after reordering
 include_cols = [i for i in range(data.shape[1]) if i not in exclude_cols]
 X = data.iloc[:, include_cols]
 #print(X.columns.to_list()) # Uncomment to verify your X columns
