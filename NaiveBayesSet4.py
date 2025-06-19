@@ -28,10 +28,6 @@ column_names = data.columns.to_list()
 print("Original columns:", data.columns.to_list())
 
 ##Changing column order
-# This step is good if you have a specific reason for reordering,
-# e.g., for easier variable selection later or for aesthetic reasons.
-# It doesn't typically affect model performance directly unless you're
-# doing something position-dependent.
 new_order = ['Efficiency', 'PLocID', 'Snaptime', 'Distance', 'Practice',
              'precipitation', 'Wind', 'Temp', 'H2F', 'PlayerIDLS', 'OP',
              'PDate', 'Hang', 'SnapLocID', 'Turf', 'Game', 'Grass', 'PlayerIDP']
