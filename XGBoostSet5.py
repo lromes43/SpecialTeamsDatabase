@@ -97,6 +97,8 @@ print("Train Score: ", np.round(train_score, 2))
 
 
 logloss_test = log_loss(y_test, pred_test)
+y_prob = xgb_clf.predict_proba(X_test)
+roc_auc = roc_auc_score(y_test, y_prob[:, 1])
 print(f"Test Log Loss: {np.round(logloss_test, 4)}")
 
 cm = confusion_matrix(y_test, pred_test)
@@ -104,7 +106,7 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=xgb_clf.classe
 disp.plot(cmap=plt.cm.Blues) # You can change the colormap
 plt.title('Confusion Matrix for XGBoost Classifier (Test Set)')
 plt.show() # Display the plot
-
+roc_auc = roc_auc_score(y_test, y_prob[:, 1])
 
 
 '''
