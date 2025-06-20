@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 from matplotlib.colors import ListedColormap
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, log_loss, roc_curve
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import time
 
 
 def euclidean_distance(a, b):
@@ -48,11 +49,15 @@ y = df['Efficiency']
 X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.20, random_state=42)
 
+start = time.process_time()
 # ---------- sklearn KNN ----------
 sk_clf = KNeighborsClassifier(n_neighbors=3)
 sk_clf.fit(X_train, y_train)
 sk_pred = sk_clf.predict(X_test)
+end = time.process_time() # time after
+CPU = end - start
 print(" accuracy:", accuracy_score(y_test, sk_pred))
+
 
 
 
@@ -70,3 +75,17 @@ plt.xlabel("Snaptime")
 plt.ylabel("Distance")
 plt.title("Snaptime vs Distance coloured by Efficiency")
 plt.show()
+
+
+
+
+logloss = log_loss(y_test, sk_pred)
+roc_auc = roc_auc_score(y_test, sk_pred)
+cm = confusion_matrix(y_test, sk_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels= [1,0]) # Use xgb_clf.classes_ for labels
+disp.plot(cmap=plt.cm.Blues) # You can change the colormap
+plt.title('Confusion Matrix for XGBoost Classifier (Test Set)')
+plt.show() # Display the plot
+print(f"CPU Time: {CPU:.4f} seconds")
+print("Log Loss", logloss)
+print(f"ROC AUC: {roc_auc:.4f}")
