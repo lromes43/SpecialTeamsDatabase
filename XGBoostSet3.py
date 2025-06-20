@@ -1,4 +1,4 @@
-##XGBoostSet3
+##XGBoostSet2
 
 import pandas as pd
 import numpy as np
@@ -18,48 +18,20 @@ import matplotlib
 from matplotlib import pyplot as plt
 import time
 
-##explore and prep data
 
-data = pd.read_csv('/Users/lukeromes/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataFinal.csv')
+csv = "/Users/lukeromes/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataFinal.csv"
+df  = pd.read_csv(csv)
 
-##Check Number of Missing Values
-missing = data.isnull().sum()
-print(missing)
+cols = ['Efficiency','PLocID','Snaptime','Distance','Practice',
+        'precipitation','Wind','Temp','H2F','PlayerIDLS','OP',
+        'PDate','Hang','SnapLocID','Turf','Game','Grass','PlayerIDP']
+df  = df[cols]
 
-##Get Dimensions of DF
-dimensions = data.shape
-print(dimensions)
+X = df.drop(columns=['Efficiency', 'PlayerIDP', 'Grass', 'Game', 'Turf', 'SnapLocID', 'Hang', 'PDate', 'OP', 'PlayerIDLS', 'H2F', 'Temp'])
+y = df['Efficiency']
 
-##Getting Names of Columns
-column_names = data.columns.to_list()
-print("Original columns:", data.columns.to_list())
-
-##Changing column order
-# This step is good if you have a specific reason for reordering,
-# e.g., for easier variable selection later or for aesthetic reasons.
-# It doesn't typically affect model performance directly unless you're
-# doing something position-dependent.
-new_order = ['Efficiency', 'PLocID', 'Snaptime', 'Distance', 'Practice',
-             'precipitation', 'Wind', 'Temp', 'H2F', 'PlayerIDLS', 'OP',
-             'PDate', 'Hang', 'SnapLocID', 'Turf', 'Game', 'Grass', 'PlayerIDP']
-
-# Apply reorder
-data = data[new_order]
-
-# Confirm final structure
-print(data.shape)
-print("Reordered columns:", data.columns.to_list())
-
-
-exclude_cols = [0,8,9,10,11,12,13,15,15,16,17] # This refers to 'Efficiency' after reordering
-include_cols = [i for i in range(data.shape[1]) if i not in exclude_cols]
-X = data.iloc[:, include_cols]
-#print(X.columns.to_list()) # Uncomment to verify your X columns
-
-y = data.iloc[:, 0]
-# y = y.values # Converting to numpy array is fine, but keeping as Series can be helpful sometimes
-              # XGBoost handles both pandas Series/DataFrame and numpy arrays.
-
+X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.20, random_state=42)
 
 #Separating Data
 start = time.process_time()
@@ -99,6 +71,8 @@ print("Train Score: ", np.round(train_score, 2))
 
 logloss_test = log_loss(y_test, pred_test)
 print(f"Test Log Loss: {np.round(logloss_test, 4)}")
+roc_auc = roc_auc_score(y_test, pred_test)
+print(f"ROC AUC: {roc_auc:.4f}")
 
 cm = confusion_matrix(y_test, pred_test)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=xgb_clf.classes_) # Use xgb_clf.classes_ for labels
