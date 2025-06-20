@@ -47,7 +47,7 @@ X = df.drop(columns='Efficiency')
 y = df['Efficiency']
 
 X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.20, random_state=42)
+        X, y, test_size=0.2, random_state=43)
 
 start = time.process_time()
 # ---------- sklearn KNN ----------
@@ -56,14 +56,9 @@ sk_clf.fit(X_train, y_train)
 sk_pred = sk_clf.predict(X_test)
 end = time.process_time() # time after
 CPU = end - start
-print(" accuracy:", accuracy_score(y_test, sk_pred))
 
 
-
-
-
-
-# ---------- simple 2‑D scatter (Snaptime vs Distance) ----------
+'''
 cmap = ListedColormap(['#FF0000', '#00FF00'])   # 0 = red, 1 = green
 X_np = X[['Snaptime','Distance']].values
 y_np = y.values
@@ -76,8 +71,7 @@ plt.ylabel("Distance")
 plt.title("Snaptime vs Distance coloured by Efficiency")
 plt.show()
 
-
-
+'''
 
 logloss = log_loss(y_test, sk_pred)
 roc_auc = roc_auc_score(y_test, sk_pred)
@@ -86,6 +80,8 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels= [1,0]) # Use 
 disp.plot(cmap=plt.cm.Blues) # You can change the colormap
 plt.title('Confusion Matrix for XGBoost Classifier (Test Set)')
 plt.show() # Display the plot
+accuracy_score = accuracy_score(y_test, sk_pred)
+print(f"Accuracy: {accuracy_score:.4f}")
 print(f"CPU Time: {CPU:.4f} seconds")
-print("Log Loss", logloss)
+print(f"Log Loss: {logloss:.4f}")
 print(f"ROC AUC: {roc_auc:.4f}")
