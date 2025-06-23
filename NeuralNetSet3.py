@@ -211,6 +211,9 @@ print(f"ROC AUC: {roc_auc:.4f}")
 print("Cross-validation with custom NN requires manual implementation or sklearn model.")
 print(f"CPU Time: {CPU: .4f}")
 
+prob = softmax(A5_test)
+
+print(prob[:,1])
 
 
 
