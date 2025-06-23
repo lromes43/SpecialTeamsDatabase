@@ -78,3 +78,6 @@ plt.show() # Display the plot
 print(f"CPU Time: {CPU:.4f} seconds")
 print("Log Loss", logloss)
 print(f"ROC AUC: {roc_auc:.4f}")
+
+probs = gnb.predict_proba(X_test)
+print(probs[: , 1])
