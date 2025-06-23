@@ -85,3 +85,7 @@ print(f"Accuracy: {accuracy_score:.4f}")
 print(f"CPU Time: {CPU:.4f} seconds")
 print(f"Log Loss: {logloss:.4f}")
 print(f"ROC AUC: {roc_auc:.4f}")
+
+probs = sk_clf.predict_proba(X_test)
+print(probs[:, 1])
+print(sk_clf.classes_)

@@ -115,6 +115,9 @@ print(f"CPU Time: {CPU: .4f}")
 print("Log Loss", LogLoss)
 print(f"ROC AUC: {roc_auc:.4f}")
 
+probs = svm.predict_proba(X_test)
+print(probs[: , 1])
+
 
 
 '''

@@ -79,7 +79,8 @@ disp.plot(cmap=plt.cm.Blues) # You can change the colormap
 plt.title('Confusion Matrix for XGBoost Classifier (Test Set)')
 plt.show() # Display the plot
 
-
+probs = xgb_clf.predict_proba(X_test)
+print(probs[:, 1])
 
 '''
 fpr, tpr, thresholds = roc_curve(y, pred_test)
