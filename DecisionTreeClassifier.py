@@ -171,3 +171,6 @@ print(Counter(y_test))
 
 
 print(X.columns.to_list())
+
+probs = clf.predict_proba(X_test)
+print(probs)
