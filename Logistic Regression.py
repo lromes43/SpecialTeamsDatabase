@@ -169,3 +169,8 @@ print(X.columns.to_list()[:5])
 
 
 
+
+prob = logr.predict_proba(X_test)
+#print(prob)
+efficiency_prob = prob[:, 1]
+print(efficiency_prob)
