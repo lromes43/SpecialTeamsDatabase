@@ -46,7 +46,7 @@ print(data.shape)  # Should be (331, 18)
 print("Reordered columns:", data.columns.to_list())
 
 ##Defining Variables
-exclude_cols = [0,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
+exclude_cols = [0,11,12,13,14,15,16,17]
 include_cols = [i for i in range(data.shape[1]) if i not in exclude_cols]
 X = data.iloc[:, include_cols]
 print(X)
@@ -66,8 +66,8 @@ logr.fit(X, y)
 ##Predict 
 
 
-new_sample = np.array([0, 0, 0])
-new_sample = new_sample.reshape(1, 3)
+new_sample = np.array([0, 0, 0,0,0,0,0,0,0,0])
+new_sample = new_sample.reshape(1, 10)
 
 predicted = logr.predict(new_sample)
 print(predicted)
