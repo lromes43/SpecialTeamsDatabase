@@ -1,16 +1,559 @@
 ---
-title: "FeatureSelection"
+title: "Feature Selection"
 output: html_document
-date: "2025-06-24"
+date: "2025-06-03"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+##Feature Selection Methods going to use: Information Gain, Mutual Information, Chi-Squared, Fisher's Score, Pearson's Correlation Coefficient (R), Variance Threshold
+#Start with 20 features maybe eliminate down to like top 10 then once have that can design experiment
 
+##Information Gain packages loaded in
 ```{r}
-print('TEST!!')
+install.packages("funModeling")
+library(funModeling)
+install.packages("FSelector")
+library(FSelectorRcpp)
+install.packages("CORElearn")
+library(CORElearn)
 ```
 
+##Load in data
+```{r}
+data <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataPulled.csv")
+data_norm <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataFinal.csv")
+```
+
+##Run Information Gain Ratio, omit height and weight for hang
+
+```{r}
+IG_PlayerIDP <- gain_ratio(data$PlayerIDP, data_norm$Hang)
+IG_PLocID <- gain_ratio(data$PLocID, data_norm$Hang)
+IG_PlayerIDLS <- gain_ratio(data$PlayerIDLS, data_norm$Hang)
+IG_SnapLocID <- gain_ratio(data$SnapLocID, data_norm$Hang)
+IG_PDate <- gain_ratio(data$PDate, data_norm$Hang)
+IG_Snaptime <- gain_ratio(data$Snaptime, data_norm$Hang)
+IG_OP <- gain_ratio(data$OP, data_norm$Hang)
+IG_H2F <- gain_ratio(data$H2F, data_norm$Hang)
+IG_Distance <- gain_ratio(data$Distance, data_norm$Hang)
+IG_Practice <- gain_ratio(data$Practice, data_norm$Hang)
+IG_Game <- gain_ratio(data$Game, data_norm$Hang)
+IG_Precipitation <- gain_ratio(data$precipitation, data_norm$Hang)
+IG_Wind <- gain_ratio(data$Wind, data_norm$Hang)
+IG_Grass <- gain_ratio(data$Grass, data_norm$Hang)
+IG_Turf <- gain_ratio(data$Turf, data_norm$Hang)
+IG_Temp <- gain_ratio(data$Temp, data_norm$Hang)
+```
+
+##Mutual Information (MI) loading packages in
+```{r}
+install.packages("FSelectorRcpp")
+library(FSelectorRcpp)
+install.packages ("infotheo")
+library(infotheo)
+```
+##Running MI on only discrete data, omit height and weight as well
+```{r}
+MI_PlayerIDP <- mutinformation(data$PlayerIDP, data$Efficiency, method = "emp")
+MI_PlocID <- mutinformation(data$PLocID, data$Efficiency, method = "emp")
+MI_PlayerIDLS <- mutinformation(data$PlayerIDLS, data$Efficiency, method = "emp")
+MI_SnapLocID <- mutinformation(data$SnapLocID, data$Efficiency, method = "emp")
+MI_PDate <- mutinformation(data$PDate, data$Efficiency, method = "emp")
+#mutinformation(data$Snaptime, data$Efficiency, method = "emp") ##ommitted due to continuous
+#mutinformation(data$OP, data$Efficiency, method = "emp")       ##ommitted due to continuous
+#mutinformation(data$H2F, data$Efficiency, method = "emp")     ##ommitted due to continuous
+#mutinformation(data$Hang, data$Efficiency, method = "emp")
+MI_Distance <- mutinformation(data$Distance, data$Efficiency, method = "emp")
+MI_Practice <- mutinformation(data$Practice, data$Efficiency, method = "emp")
+MI_Game <- mutinformation(data$Game, data$Efficiency, method = "emp")
+MI_Wind <- mutinformation(data$Wind, data$Efficiency, method = "emp")
+MI_Grass <- mutinformation(data$Grass, data$Efficiency, method = "emp")
+MI_Turf <- mutinformation(data$Turf, data$Efficiency, method = "emp")
+```
+
+##Installing Chi-Squared packages
+```{r}
+install.packages("MASS")
+library(MASS)
+```
+```{r}
+
+summary(data$precipitation)
+```
+
+
+##Creating Contingency Tables
+```{r}
+##Creates Bins for Distance Feature
+summary(data$Distance)
+data$DistanceCat <- cut (
+  data$Distance, 
+  breaks = c(-Inf, 37, 46, Inf),
+  labels = c("Short", "Medium", "Long"),
+  right = TRUE
+)
+## Contingency Table for Distance and Effiency
+dist = data.frame(data$DistanceCat, data$Efficiency)
+dist = table(data$DistanceCat, data$Efficiency)
+print(dist)
+
+## Game Bins
+data$GameCat <- cut (
+  data$Game,
+  breaks = c(-Inf, 1, 4, Inf),
+  labels = c("Practice", "Non-Conference", "Conference"),
+  right = TRUE
+)
+
+##Contingency Table For Game and Effiency
+
+game = data.frame (data$GameCat, data$Efficiency)
+game = table(data$GameCat, data$Efficiency)
+print(game)
+
+##Grass Bins
+data$GrassCat <- cut (
+  data$Grass,
+  breaks = c(-Inf, 0, 1),
+  labels = c("Grass", "Turf"),
+  right = TRUE
+)
+
+##Grass Contingency Table
+
+grass = data.frame(data$GrassCat, data$Efficiency)
+grass = table(data$GrassCat, data$Efficiency)
+print(grass)
+
+##H2F Bins
+
+data$H2FCat <- cut (
+  data$H2F,
+  breaks = c(-Inf, 1.220, 1.4, Inf),
+  labels = c("Great", "Average", "Poor"),
+  right = TRUE
+)
+
+##H2F Contingency Table
+
+H2F = data.frame(data$H2FCat, data$Efficiency)
+H2F = table(data$H2FCat, data$Efficiency)
+print(H2F)
+
+
+##Hang Bins
+data$HangCat <- cut (
+  data$Hang,
+  breaks = c(-Inf, 3.22, 3.9, 4.530),
+  labels = c("Poor", "Average", "Great"),
+  right = TRUE
+)
+
+##Hang Contingency Table
+Hang = data.frame(data$HangCat, data$Efficiency)
+Hang = table(data$HangCat, data$Efficiency)
+print(Hang)
+
+##Op Bins
+data$OPCat <- cut (
+  data$OP,
+  breaks = c(-Inf, 1.970, 2.18, 2.680),
+  labels = c("Great", "Average", "Poor"),
+  right = TRUE
+)
+##OP Table
+OP = data.frame(data$OPCat, data$Efficiency)
+OP = table(data$OPCat, data$Efficiency)
+print(OP)
+
+##PlayerIDLS Bins
+
+data$PlayerIDLSCat <- cut (
+  data$PlayerIDLS,
+  breaks = c(-Inf, 41, 44, 58, 98),
+  labels = c("Gus", "Charlie", "Rob", "Bryce"),
+  right = TRUE
+)
+
+##PlayerIDLS Table
+
+PlayerIDLS = data.frame(data$PlayerIDLSCat, data$Efficiency)
+PlayerIDLS = table(data$PlayerIDLSCat, data$Efficiency)
+print(PlayerIDLS)
+
+##PlayerIDP
+data$PlayerIDPCat <- cut (
+  data$PlayerIDP,
+  breaks = c(-Inf, 61, 96),
+  labels = c("Charlie", "Josh"),
+  right = TRUE
+)
+
+##PlayerIDP Table
+
+PlayerIDP = data.frame(data$PlayerIDPCat, data$Efficiency)
+PlayerIDP = table(data$PlayerIDPCat, data$Efficiency)
+print(PlayerIDP)
+
+##PLocID Bins
+
+data$PLocIDCat <- cut (
+  data$PLocID,
+  breaks = c(-Inf, 1, 2, 3),
+  labels = c("Poor", "Average", "Great"),
+  right = TRUE
+)
+
+##PLocID Table
+
+PLocID = data.frame(data$PLocIDCat, data$Efficiency)
+PLocID = table(data$PLocIDCat, data$Efficiency)
+print(PLocID)
+
+
+##Practice Bins
+
+data$PracticeCat <- cut (
+  data$Practice,
+  breaks = c(-Inf, 0, 1),
+  labels = c("Game", "Practice"),
+  right = TRUE
+)
+
+##Practice Table
+
+Practice = data.frame(data$PracticeCat, data$Efficiency)
+Practice = table(data$PracticeCat, data$Efficiency)
+print(Practice)
+
+##SnapLocID Bins
+
+data$SnapLocIDCat <- cut (
+  data$SnapLocID,
+  breaks = c(-Inf, 1, 2, 3),
+  labels = c("Poor", "Average", "Great"),
+  right = TRUE
+  
+)
+
+##SnapLocID Table
+
+SnapLocID = data.frame(data$SnapLocIDCat, data$Efficiency)
+SnapLocID = table(data$SnapLocIDCat, data$Efficiency)
+print(SnapLocID)
+
+##Turf Bins
+
+data$TurfCat <- cut (
+  data$Practice,
+  breaks = c(-Inf, 0, 1),
+  labels = c("Grass", "Turf"),
+  right = TRUE
+)
+
+## Turf Table
+
+Turf = data.frame(data$TurfCat, data$Efficiency)
+Turf = table(data$TurfCat, data$Efficiency)
+print(Turf)
+
+##Wind Bins
+
+data$WindCat <- cut (
+  data$Wind,
+  breaks = c(-Inf, 10, 15, Inf),
+  labels = c("Low", "Average", "High"),
+  right = TRUE
+)
+
+##Wind Table
+
+Wind = data.frame(data$WindCat, data$Efficiency)
+Wind = table(data$WindCat, data$Efficiency)
+print(Wind)
+
+##Temp Bins
+
+data$TempCat <- cut (
+  data$Temp,
+  breaks = c(-Inf, 52.79,66.33, Inf),
+  labels = c("Cool", "Average", "Warm"),
+  right = TRUE
+)
+
+Temp = data.frame(data$TempCat, data$Efficiency)
+Temp = table(data$TempCat, data$Efficiency)
+print(Temp)
+
+##Snaptime Bins
+
+data$SnaptimeCat <- cut (
+  data$Snaptime,
+  breaks = c(-Inf, .7, .78, Inf),
+  labels = c("Great", "Average", "Poor"),
+  right = TRUE
+)
+
+##Snaptime Table
+
+Snaptime = data.frame(data$SnaptimeCat, data$Efficiency)
+Snaptime = table(data$SnaptimeCat, data$Efficiency)
+print(Snaptime)
+
+
+##Precipitation Bins
+
+data$precipitationCat <- cut (
+  data$precipitation,
+  breaks = c(-Inf, 0.1, .1764, 2),
+  labels = c("Low", "Medium", "High"),
+  right = TRUE
+)
+
+##Precipitation Table
+
+Precipitation = data.frame(data$precipitationCat, data$Efficiency)
+Precipitation = table(data$precipitationCat, data$Efficiency)
+print(Precipitation)
+
+
+
+
+
+##Date Conversion
+
+data$PDate <- as.Date(data$PDate)
+reference_date <- as.Date("2024-08-01")
+data$DaysSinceAug1 <- as.numeric(data$PDate - reference_date)
+
+summary(data$DaysSinceAug1)
+
+##Date Bins
+
+data$DaysSinceAug1Cat <- cut (
+  data$DaysSinceAug1,
+  breaks = c(-Inf, 29, 51,Inf),
+  labels = c("PreSeason", "NonConference", "Conference")
+)
+
+DaysSinceAug1 <- data.frame(data$DaysSinceAug1Cat, data$Efficiency)
+DaysSinceAug1 <- table(data$DaysSinceAug1Cat, data$Efficiency)
+print(DaysSinceAug1)
+
+
+```
+##Applying Chi2
+```{r}
+DistanceChi <- print(chisq.test(dist)) ## test for dist
+GameChi <- print(chisq.test(game)) ##test for game
+GrassChi <- print(chisq.test(grass)) ##Test for grass
+H2FChi <- print(chisq.test(H2F)) ## test for hand to foot
+HangChi <- print(chisq.test(Hang)) ## test for Hang
+OPChi <- print(chisq.test(OP)) ##test for OP
+PlayerIDLSChi <- print(chisq.test(PlayerIDLS)) ##test for PlayerIDLS
+PlayerIDPChi <- print(chisq.test(PlayerIDP)) ##test for PlayerIDP
+PLocIDChi <- print(chisq.test(PLocID)) ##test for PLocID
+PracticeChi <- print(chisq.test(Practice)) ##test for Practice
+SnapLocIDChi <- print(chisq.test(SnapLocID)) ##test for SnapLocID
+TurfChi <- print(chisq.test(Turf)) ##test for Turf
+WindChi <- print(chisq.test(Wind)) ##test for Wind
+TempChi <- print(chisq.test(Temp)) ##test for Temp
+SnaptimeChi <- print(chisq.test(Snaptime)) ##test for Snaptime
+PrecipitationChi <- print(chisq.test(Precipitation)) ##test for Precipitation
+DateChi <- print(chisq.test(DaysSinceAug1)) ##Test for Date
+```
+##Visualizing Chi2
+```{r}
+barplot(dist, beside = TRUE, col = c("orange", "green"),
+        main = "Distance vs Effiency",
+        xlab = "Effiency",
+        ylab = "Number")
+legend("center", legend = rownames(dist), fill = c("orange", "green"))
+```
+
+##Fisher Information Loading
+```{r}
+numericdata <- data_norm[sapply(data_norm, is.numeric)]
+sigmas <- sapply(numericdata, sd, na.rm = TRUE)
+
+fisher_info <- function(x_col, sigma) {
+  n <- sum(!is.na(x_col))  # exclude NA values from n
+  n / sigma^2
+}
+
+fisher_info_values <-mapply(fisher_info, numericdata, sigmas)
+
+print(fisher_info_values)
+```
+
+##Fisher Score Formula
+```{r}
+
+fisher_score_manual <- function(X, y) {
+  classes <- unique(y)
+  if (length(classes) != 2) stop("Only supports binary classification")
+  
+  scores <- sapply(X, function(feature) {
+    class1 <- feature[y == classes[1]]
+    class2 <- feature[y == classes[2]]
+    
+    mean_diff <- abs(mean(class1, na.rm = TRUE) - mean(class2, na.rm = TRUE))
+    var1 <- var(class1, na.rm = TRUE)
+    var2 <- var(class2, na.rm = TRUE)
+    var_sum <- var1 + var2
+    
+    if (is.na(var_sum) || var_sum == 0) {
+      return(0)
+    } else {
+      return((mean_diff^2) / var_sum)
+    }
+  })
+  
+  sort(scores, decreasing = TRUE)
+}
+
+```
+
+##Fisher Score Calculation
+```{r}
+# Ensure target is a factor with 2 levels
+data_norm$Efficiency <- as.factor(data_norm$Efficiency)
+
+# Drop target column from features
+X <- data_norm[, setdiff(names(data_norm), "Efficiency")]
+y <- data_norm$Efficiency
+
+# Run
+fisher_scores <- fisher_score_manual(X, y)
+print(fisher_scores)
+
+
+```
+
+
+##Pearson Correlation Coefficient (R)
+
+##Installing COR Package
+```{r}
+install.packages("COR")
+library(COR)
+```
+
+
+##Converting Y (Data_norm$efficiency) from factor to numeric col_type
+```{r}
+data_norm$Efficiency <- as.numeric(as.character(data_norm$Efficiency))
+str(data_norm$Efficiency)
+```
+
+##PCC Calculation, y = efficiency, x = different features
+```{r}
+cor.test(data_norm$Distance, data_norm$Efficiency, method = "pearson")
+cor.test(data_norm$Game, data$Efficiency, method = "pearson")
+cor.test(data_norm$Grass, data$Efficiency, method ="pearson")
+cor.test(data_norm$H2F, data$Efficiency, method = "pearson")
+cor.test(data_norm$Hang, data$Efficiency, method = "pearson")
+cor.test(data_norm$OP, data$Efficiency, method = "pearson")
+cor.test(data_norm$PDate, data$Efficiency, method = "pearson")
+cor.test(data_norm$PlayerIDLS, data$Efficiency, method = "pearson")
+cor.test(data_norm$PlayerIDP, data$Efficiency, method = "pearson")
+cor.test(data_norm$PLocID, data$Efficiency, method = "pearson")
+cor.test(data_norm$Practice, data$Efficiency, method = "pearson")
+cor.test(data_norm$precipitation, data$Efficiency, method = "pearson")
+cor.test(data_norm$SnapLocID, data$Efficiency, method = "pearson")
+cor.test(data_norm$Snaptime, data$Efficiency, method = "pearson")
+cor.test(data_norm$Temp, data$Efficiency, method = "pearson")
+cor.test(data_norm$Turf, data$Efficiency, method = "pearson")
+cor.test(data_norm$Wind, data$Efficiency, method = "pearson")
+```
+
+##Variance Threshold
+
+##Caluclating Variance
+```{r}
+variances <- apply(data_norm, 2, var)
+print(variances)
+
+threshold <- 0.5
+selected_features <- names(variances[variances >= threshold])
+print(selected_features)
+```
+
+
+##Particle Swarm Optimization
+
+##Pso Packages
+```{r}
+install.packages("metaheuristicOpt")
+install.packages("caret")
+install.packages("e1071")  # for SVM
+library(metaheuristicOpt)
+library(caret)
+library(e1071)
+
+```
+##Pso Data
+```{r}
+dim(data_norm)
+X <- data_norm[, -11]
+y <- as.factor(data_norm[,11])
+```
+
+```{r}
+install.packages("metaheuristicOpt")  # Run this line if not installed
+library(metaheuristicOpt)             # Load the package
+
+```
+
+
+##Fitness Function
+```{r}
+fs_fitness <- function(solution) {
+  solution <- round(solution)  # <-- right here, at the start
+
+  if (sum(solution) == 0) 
+    return(1)
+
+  selected <- which(solution == 1)
+  X_selected <- X[, selected, drop = FALSE]
+
+  ctrl <- trainControl(method = "cv", number = 5)
+
+  model <- tryCatch({
+    train(x = X_selected, y = y, method = "svmRadial", trControl = ctrl)
+  }, error = function(e) return(NULL))
+
+  if (is.null(model)) return(1)
+
+  return(1 - max(model$results$Accuracy))  # minimize error
+}
+
+
+```
+
+##Run PSO
+```{r}
+res <- PSO(
+  FUN = fs_fitness,
+  optimType = "MIN",
+  numVar = num_features,
+  numPopulation = 20,
+  maxIter = 30,
+  rangeVar = matrix(c(0, 1), nrow = 2)
+)
+
+
+```
+
+```{r}
+ls("package:metaheuristicOpt")
+
+```
+```{r}
+best_solution <- round(res$bestVar)  # round to get binary 0/1 vector
+selected_features <- which(best_solution == 1)
+
+```
