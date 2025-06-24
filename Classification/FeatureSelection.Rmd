@@ -19,7 +19,7 @@ library(funModeling)
 
 ##Load in data
 ```{r}
-data <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataPulled.csv")
+#data <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataPulled.csv")
 data_norm <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataFinal.csv")
 ```
 
