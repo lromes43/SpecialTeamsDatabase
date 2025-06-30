@@ -711,50 +711,23 @@ library(e1071)
 
 ##Fitness Function
 ```{r}
-fs_fitness <- function(solution) {
-  solution <- round(solution) # <-- right here, at the start
-
-  if (sum(solution) == 0)
-    return(1) # Return maximum error if no features selected
-
-  selected <- which(solution == 1)
-  X_selected <- X[, selected, drop = FALSE] # drop = FALSE to keep as data.frame/matrix even if one column
-
-  ctrl <- trainControl(method = "cv", number = 5)
-
-  model <- tryCatch({
-    train(x = X_selected, y = y, method = "svmRadial", trControl = ctrl)
-  }, error = function(e) return(NULL))
-
-  if (is.null(model)) {
-      # This handles cases where train fails (e.g., due to insufficient features for SVM)
-      # Returning 1 is a good strategy to penalize failed models
-      return(1)
-  }
-
-  return(1 - max(model$results$Accuracy)) # minimize error (1 - accuracy)
-}
-
-
+install.packages("dplyr")
+library(dplyr)
 ```
 
-##Run PSO
 
+#Import Data
 
 ```{r}
-# Calculate the number of features (columns) in your feature matrix X
-num_features <- ncol(X)
+data <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataPulled.csv")
 
-# Now your PSO call should work
-res <- PSO(
-  FUN = fs_fitness,
-  optimType = "MIN",
-  numVar = num_features, # This is now defined
-  numPopulation = 20,
-  maxIter = 30,
-  rangeVar = matrix(c(0, 1), nrow = 2)
-)
+
+hang <- read.csv("~/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataFinal.csv")
+hang <- hang %>%
+  mutate()
 ```
+
+##
 
 
 ```{r}
@@ -763,6 +736,7 @@ ls("package:metaheuristicOpt") # Just for listing functions
 best_solution <- round(res$bestVar) # round to get binary 0/1 vector
 selected_features <- which(best_solution == 1)
 ```
+
 ```{r}
 best_solution <- round(res$bestVar)  # round to get binary 0/1 vector
 selected_features <- which(best_solution == 1)
@@ -771,12 +745,237 @@ selected_features <- which(best_solution == 1)
 
 ##Defining columns for the dataframe
 ```{r}
-column1data <- c(IG_Distance, IG_Game, IG_Grass, IG_H2F, IG_Hang, IG_Hang, IG_OP, IG_PDate, IG_PlayerIDLS, IG_PlayerIDP, IG_PLocID, IG_Practice, IG_Precipitation, IG_SnapLocID, IG_Snaptime, IG_Temp, IG_Turf, IG_Wind)
+column1data <- c(IG_Distance, IG_Game, IG_Grass, IG_H2F, IG_OP, IG_PDate, IG_PlayerIDLS, IG_PlayerIDP, IG_PLocID, IG_Practice, IG_Precipitation, IG_SnapLocID, IG_Snaptime, IG_Temp, IG_Turf, IG_Wind)
 column2data <- c(MI_Distance, MI_Game, MI_Grass, MI_H2F, MI_OP, MI_PDate, MI_PlayerIDLS, MI_PlayerIDP, MI_PlocID, MI_Practice, MI_Precipitation, MI_SnapLocID, MI_Snaptime, MI_Temp, MI_Turf, MI_Wind)
 column3data <- c(DistanceChi$p.value, GameChi$p.value, GrassChi$p.value, H2FChi$p.value, OPChi$p.value, DateChi$p.value, PlayerIDLSChi$p.value, PlayerIDPChi$p.value, PLocIDChi$p.value, PracticeChi$p.value, PrecipitationChi$p.value, SnapLocIDChi$p.value, SnaptimeChi$p.value, TempChi$p.value, TurfChi$p.value, WindChi$p.value) 
 column4data <- c(FIDistance, FIGame, FIGrass, FIH2F, FIOP, FIPDate, FIPlayerIDLS, FIPlayerIDP, FIPLocID, FIPractice, FIPrecipitation, FISnapLocID, FISnaptime, FITemp, FITurf, FIWind)
 column5data <- c(FSDistance, FSGame, FSGrass, FSH2F, FSOP, FSPDate, FSPlayerIDLS, FSPlayerIDP, FSPLocID, FSPractice,FSPrecipitation, FSSnapLocID, FSSnaptime, FSTemp, FSTurf, FSWind)
 column6data <- c(PCC_Distance$estimate, PCC_Game$estimate, PCC_Grass$estimate, PCC_H2F$estimate, PCC_OP$estimate, PCC_PDate$estimate, PCC_PlayerIDLS$estimate, PCC_PlayerIDP$estimate, PCC_PLocID$estimate, PCC_Practice$estimate, PCC_Precipitation$estimate, PCC_SnapLocID$estimate, PCC_Snaptime$estimate, PCC_Temp$estimate, PCC_Turf$estimate, PCC_Wind$estimate)
 column7data <- c(VTDistance, VTGame, VTGrass, VTH2F, VTOP, VTPDate, VTPlayerIDLS, VTPlayerIDP, VTPLocID, VTPractice, VTPrecipitation, VTSnapLocID, VTSnaptime, VTTemp, VTTurf, VTWind)
+
+
+```
+
+```{r}
+FSHang <- data.frame(
+  InformationGain = column1data,
+  MutualInformation = column2data,
+  CHISquared = column3data,
+  FishersScore = column5data,
+  FisherInformation = column4data,
+  PCC =column6data,
+  VariqnceThreshold = column7data
+)
+
+
+```
+
+```{r}
+head(FSHang)
+home_path <- Sys.getenv("HOME")
+print(home_path)
+```
+
+
+
+```{r}
+# --- PART 1: Ensure all individual variables hold VALUES, not functions ---
+
+# Placeholder data for demonstration - REPLACE WITH YOUR ACTUAL DATA
+# You would have a main data frame, e.g., 'your_main_data', with columns
+# like 'Distance', 'Game', 'Grass', etc., and a 'TargetVariable'.
+# Make sure your data is in the correct format (e.g., discretized for MI/IG if needed).
+
+# For example, if your raw data is in 'my_raw_data' and your target is 'target_var':
+# library(infotheo)
+# your_main_data_discretized <- discretize(my_raw_data) # Discretize if using infotheo for MI/IG
+
+# --- Information Gain (column1data) ---
+# Assuming these are results from some Information Gain calculation
+# IMPORTANT: These must be single numeric values (or vectors of values)
+IG_Distance <- 0.15 # Replace with actual calculation result e.g. mutinformation(your_main_data_discretized$Distance, your_main_data_discretized$TargetVariable)
+IG_Game <- 0.20
+IG_Grass <- 0.05
+IG_H2F <- 0.10
+IG_OP <- 0.18
+IG_PDate <- 0.07
+IG_PlayerIDLS <- 0.25
+IG_PlayerIDP <- 0.22
+IG_PLocID <- 0.08
+IG_Practice <- 0.03
+IG_Precipitation <- 0.06
+IG_SnapLocID <- 0.12
+IG_Snaptime <- 0.09
+IG_Temp <- 0.14
+IG_Turf <- 0.04
+IG_Wind <- 0.11
+
+# --- Mutual Information (column2data) ---
+# Assuming these are results from some Mutual Information calculation
+MI_Distance <- 0.16
+MI_Game <- 0.21
+MI_Grass <- 0.06
+MI_H2F <- 0.11
+MI_OP <- 0.19
+MI_PDate <- 0.08
+MI_PlayerIDLS <- 0.26
+MI_PlayerIDP <- 0.23
+MI_PlocID <- 0.09
+MI_Practice <- 0.04
+MI_Precipitation <- 0.07
+MI_SnapLocID <- 0.13
+MI_Snaptime <- 0.10
+MI_Temp <- 0.15
+MI_Turf <- 0.05
+MI_Wind <- 0.12
+
+# --- Chi-Squared p-values (column3data) ---
+# Assuming these are results like chi.test(x, y)$p.value
+# Example if using built-in chi-squared test:
+# DistanceChi <- chisq.test(table(your_main_data$Distance, your_main_data$TargetVariable))
+# GameChi     <- chisq.test(table(your_main_data$Game, your_main_data$TargetVariable))
+DistanceChi <- list(p.value = 0.001) # Placeholder
+GameChi <- list(p.value = 0.005) # Placeholder
+GrassChi <- list(p.value = 0.010) # Placeholder
+H2FChi <- list(p.value = 0.020) # Placeholder
+OPChi <- list(p.value = 0.002) # Placeholder
+DateChi <- list(p.value = 0.015) # Placeholder
+PlayerIDLSChi <- list(p.value = 0.0001) # Placeholder
+PlayerIDPChi <- list(p.value = 0.0005) # Placeholder
+PLocIDChi <- list(p.value = 0.008) # Placeholder
+PracticeChi <- list(p.value = 0.030) # Placeholder
+PrecipitationChi <- list(p.value = 0.025) # Placeholder
+SnapLocIDChi <- list(p.value = 0.012) # Placeholder
+SnaptimeChi <- list(p.value = 0.007) # Placeholder
+TempChi <- list(p.value = 0.018) # Placeholder
+TurfChi <- list(p.value = 0.009) # Placeholder
+WindChi <- list(p.value = 0.011) # Placeholder
+
+# --- Fisher's Score (column5data) ---
+# Assuming these are numeric values from a Fisher's Score calculation
+FSDistance <- 0.85
+FSGame <- 0.70
+FSGrass <- 0.90
+FSH2F <- 0.75
+FSOP <- 0.88
+FSPDate <- 0.80
+FSPlayerIDLS <- 0.95
+FSPlayerIDP <- 0.92
+FSPLocID <- 0.82
+FSPractice <- 0.65
+FSPrecipitation <- 0.78
+FSSnapLocID <- 0.83
+FSSnaptime <- 0.79
+FSTemp <- 0.81
+FSTurf <- 0.89
+FSWind <- 0.77
+
+# --- Fisher Information (column4data) ---
+# Assuming these are numeric values from a Fisher Information calculation
+FIDistance <- 1.5
+FIGame <- 1.8
+FIGrass <- 1.2
+FIH2F <- 1.6
+FIOP <- 1.9
+FIPDate <- 1.3
+FIPlayerIDLS <- 2.0
+FIPlayerIDP <- 1.7
+FIPLocID <- 1.4
+FIPractice <- 1.1
+FIPrecipitation <- 1.75
+FISnapLocID <- 1.65
+FISnaptime <- 1.45
+FITemp <- 1.55
+FITurf <- 1.85
+FIWind <- 1.35
+
+# --- PCC (Pearson Correlation Coefficient) (column6data) ---
+# Assuming these are results like cor.test(x, y)$estimate
+# Example if using built-in correlation test:
+# PCC_Distance <- cor.test(your_main_data$Distance, your_main_data$TargetVariable)
+PCC_Distance <- list(estimate = 0.6) # Placeholder
+PCC_Game <- list(estimate = 0.5) # Placeholder
+PCC_Grass <- list(estimate = 0.4) # Placeholder
+PCC_H2F <- list(estimate = 0.7) # Placeholder
+PCC_OP <- list(estimate = 0.65) # Placeholder
+PCC_PDate <- list(estimate = 0.55) # Placeholder
+PCC_PlayerIDLS <- list(estimate = 0.8) # Placeholder
+PCC_PlayerIDP <- list(estimate = 0.75) # Placeholder
+PCC_PLocID <- list(estimate = 0.62) # Placeholder
+PCC_Practice <- list(estimate = 0.45) # Placeholder
+PCC_Precipitation <- list(estimate = 0.58) # Placeholder
+PCC_SnapLocID <- list(estimate = 0.68) # Placeholder
+PCC_Snaptime <- list(estimate = 0.52) # Placeholder
+PCC_Temp <- list(estimate = 0.63) # Placeholder
+PCC_Turf <- list(estimate = 0.48) # Placeholder
+PCC_Wind <- list(estimate = 0.59) # Placeholder
+
+
+# --- Variance Threshold (column7data) ---
+# Assuming these are numeric values, maybe 0/1 indicating above/below threshold
+VTDistance <- 1
+VTGame <- 1
+VTGrass <- 0
+VTH2F <- 1
+VTOP <- 1
+VTPDate <- 0
+VTPlayerIDLS <- 1
+VTPlayerIDP <- 1
+VTPLocID <- 0
+VTPractice <- 0
+VTPrecipitation <- 1
+VTSnapLocID <- 1
+VTSnaptime <- 0
+VTTemp <- 1
+VTTurf <- 0
+VTWind <- 1
+
+# --- PART 2: Create column data vectors (this part of your code was fine,
+#             as long as the variables above hold actual values) ---
+
+column1data <- c(IG_Distance, IG_Game, IG_Grass, IG_H2F, IG_OP, IG_PDate, IG_PlayerIDLS, IG_PlayerIDP, IG_PLocID, IG_Practice, IG_Precipitation, IG_SnapLocID, IG_Snaptime, IG_Temp, IG_Turf, IG_Wind)
+column2data <- c(MI_Distance, MI_Game, MI_Grass, MI_H2F, MI_OP, MI_PDate, MI_PlayerIDLS, MI_PlayerIDP, MI_PlocID, MI_Practice, MI_Precipitation, MI_SnapLocID, MI_Snaptime, MI_Temp, MI_Turf, MI_Wind)
+column3data <- c(DistanceChi$p.value, GameChi$p.value, GrassChi$p.value, H2FChi$p.value, OPChi$p.value, DateChi$p.value, PlayerIDLSChi$p.value, PlayerIDPChi$p.value, PLocIDChi$p.value, PracticeChi$p.value, PrecipitationChi$p.value, SnapLocIDChi$p.value, SnaptimeChi$p.value, TempChi$p.value, TurfChi$p.value, WindChi$p.value)
+column4data <- c(FIDistance, FIGame, FIGrass, FIH2F, FIOP, FIPDate, FIPlayerIDLS, FIPlayerIDP, FIPLocID, FIPractice, FIPrecipitation, FISnapLocID, FISnaptime, FITemp, FITurf, FIWind)
+column5data <- c(FSDistance, FSGame, FSGrass, FSH2F, FSOP, FSPDate, FSPlayerIDLS, FSPlayerIDP, FSPLocID, FSPractice,FSPrecipitation, FSSnapLocID, FSSnaptime, FSTemp, FSTurf, FSWind)
+column6data <- c(PCC_Distance$estimate, PCC_Game$estimate, PCC_Grass$estimate, PCC_H2F$estimate, PCC_OP$estimate, PCC_PDate$estimate, PCC_PlayerIDLS$estimate, PCC_PlayerIDP$estimate, PCC_PLocID$estimate, PCC_Practice$estimate, PCC_Precipitation$estimate, PCC_SnapLocID$estimate, PCC_Snaptime$estimate, PCC_Temp$estimate, PCC_Turf$estimate, PCC_Wind$estimate)
+column7data <- c(VTDistance, VTGame, VTGrass, VTH2F, VTOP, VTPDate, VTPlayerIDLS, VTPlayerIDP, VTPLocID, VTPractice, VTPrecipitation, VTSnapLocID, VTSnaptime, VTTemp, VTTurf, VTWind)
+
+
+# --- PART 3: Create the FSHang data frame ---
+# This part of your code is now correct, assuming the 'columnXdata' vectors are valid
+FSHang <- data.frame(
+  InformationGain = column1data,
+  MutualInformation = column2data,
+  CHISquared = column3data,
+  FishersScore = column5data,
+  FisherInformation = column4data, # Corrected order based on your original request
+  PCC = column6data,
+  VarianceThreshold = column7data # Corrected typo 'VariqnceThreshold' to 'VarianceThreshold'
+)
+
+# You should always add row names or an identifier column to your data frame
+# if you want to keep track of which row corresponds to which original feature.
+# Let's assume your original feature names were:
+feature_names <- c("Distance", "Game", "Grass", "H2F", "OP", "PDate", "PlayerIDLS", "PlayerIDP", "PLocID", "Practice", "Precipitation", "SnapLocID", "Snaptime", "Temp", "Turf", "Wind")
+rownames(FSHang) <- feature_names
+
+
+# --- PART 4: Save the FSHang data frame to CSV ---
+
+# Get the desktop path (this is correct)
+desktop_path <- file.path(Sys.getenv("HOME"), "Desktop")
+
+# Define your desired filename (ADD THE .csv EXTENSION)
+file_name <- "FSHang.csv" # <--- CRITICAL FIX: Added .csv extension
+
+# Create the full path to the file (USE YOUR VARIABLES, DON'T HARDCODE)
+full_file_path <- file.path(desktop_path, file_name) # <--- CRITICAL FIX: Use desktop_path and file_name variables
+
+# Write the data frame to the CSV file
+write.csv(FSHang, file = full_file_path, row.names = TRUE) # Keeping row.names=TRUE if you added feature names
+
+# Print a confirmation message
+cat("Successfully saved 'FSHang' to:", full_file_path, "\n") # Corrected message to reflect FSHang
 ```
 
