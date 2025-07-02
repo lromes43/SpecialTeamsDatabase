@@ -41,22 +41,61 @@ library(writexl)
 
 ```{r}
 IG_PlayerIDP <- gain_ratio(data$PlayerIDP, data_norm$Distance)
+print(IG_PlayerIDP)
 IG_PLocID <- gain_ratio(data$PLocID, data_norm$Distance)
+print(IG_PLocID)
 IG_PlayerIDLS <- gain_ratio(data$PlayerIDLS, data_norm$Distance)
+print(IG_PlayerIDLS)
 IG_SnapLocID <- gain_ratio(data$SnapLocID, data_norm$Distance)
+print(IG_SnapLocID)
 IG_PDate <- gain_ratio(data$PDate, data_norm$Distance)
+print(IG_PDate)
 IG_Snaptime <- gain_ratio(data$Snaptime, data_norm$Distance)
+print(IG_Snaptime)
 IG_OP <- gain_ratio(data$OP, data_norm$Distance)
+print(IG_OP)
 IG_H2F <- gain_ratio(data$H2F, data_norm$Distance)
+print(IG_H2F)
 IG_Hang <- gain_ratio(data$Distance, data_norm$Hang)
+print(IG_Hang)
 IG_Practice <- gain_ratio(data$Practice, data_norm$Distance)
+print(IG_Practice)
 IG_Game <- gain_ratio(data$Game, data_norm$Distance)
+print(IG_Game)
 IG_Precipitation <- gain_ratio(data$precipitation,data_norm$Distance)
+print(IG_Precipitation)
 IG_Wind <- gain_ratio(data$Wind, data_norm$Distance)
+print(IG_Wind)
 IG_Grass <- gain_ratio(data$Grass, data_norm$Distance)
+print(IG_Grass)
 IG_Turf <- gain_ratio(data$Turf, data_norm$Distance)
+print(IG_Turf)
 IG_Temp <- gain_ratio(data$Temp, data_norm$Distance)
+print(IG_Temp)
 ```
+```{r}
+IGValues <- c(
+  Game = IG_Game,
+  Grass = IG_Grass,
+  H2F = IG_H2F,
+  Hang = IG_Hang, 
+  OP = IG_OP, 
+  Pdate = IG_PDate,
+  PlayerIDLS = IG_PlayerIDLS,
+  PlayerrIDP = IG_PlayerIDP, 
+  PLOCID = IG_PLocID, 
+  Practice = IG_Practice,
+  Precipitation = IG_Precipitation,
+  SnapLocID = IG_SnapLocID,
+  Snaptime = IG_Snaptime, 
+  Temp = IG_Temp, 
+  Turf = IG_Turf,
+  Wind = IG_Wind
+)
+
+print(IGValues)
+```
+
 
 ##Mutual Information (MI) loading packages in
 ```{r}
@@ -178,8 +217,8 @@ MI_PlayerIDLS <- mutinformation(data_norm$PlayerIDLS, data_norm$DistanceCat, met
 MI_SnapLocID <- mutinformation(data_norm$SnapLocID, data_norm$DistanceCat, method = "emp")
 MI_PDate <- mutinformation(data$PDate, data_norm$DistanceCat, method = "emp")
 MI_Snaptime <- mutinformation(data_norm$SnaptimeCat,data_norm$DistanceCat, method = "emp") ##ommitted due to continuous
-#MI_OP <- mutinformation(data_norm$OPCat, data$Efficiency, method = "emp")       ##ommitted due to continuous
-#MI_H2F <- mutinformation(data_norm$H2FCat, data$Efficiency, method = "emp")     ##ommitted due to continuous
+MI_OP <- mutinformation(data_norm$OPCat, data$Efficiency, method = "emp")       ##ommitted due to continuous
+MI_H2F <- mutinformation(data_norm$H2FCat, data$Efficiency, method = "emp")     ##ommitted due to continuous
 #MI_Distance <- mutinformation(data_norm$DistanceCat,  data_norm$DistanceCat, method = "emp")
 MI_Hang <- mutinformation(data_norm$HangCat, data_norm$DistanceCat, method = "emp")
 MI_Practice <- mutinformation(data_norm$Practice,  data_norm$DistanceCat, method = "emp")
@@ -589,7 +628,7 @@ print(fisher_scores)
 ```
 
 ```{r}
-FSHang <- fisher_scores[2=]
+FSHang <- fisher_scores[3]
 FSGame <- fisher_scores[6]
 FSGrass <- fisher_scores[12]
 FSH2F <- fisher_scores[3]
@@ -623,24 +662,24 @@ data_norm$Efficiency <- as.numeric(as.character(data_norm$Hang))
 str(data_norm$Hang)
 ```
 
-##PCC Calculation, y = efficiency, x = different features
+##PCC Calculation, y= dist, x = different features
 ```{r}
-PCC_Distance <- cor.test(data_norm$Distance, data_norm$Hang, method = "pearson")
-PCC_Game<- cor.test(data_norm$Game, data_norm$Hang, method = "pearson")
-PCC_Grass <- cor.test(data_norm$Grass, data_norm$Hang, method ="pearson")
-PCC_H2F <- cor.test(data_norm$H2F, data_norm$Hang, method = "pearson")
-PCC_OP <- cor.test(data_norm$OP, data_norm$Hang, method = "pearson")
-PCC_PDate <- cor.test(data_norm$PDate, data_norm$Hang, method = "pearson")
-PCC_PlayerIDLS <- cor.test(data_norm$PlayerIDLS, data_norm$Hang, method = "pearson")
-PCC_PlayerIDP <- cor.test(data_norm$PlayerIDP, data_norm$Hang, method = "pearson")
-PCC_PLocID <- cor.test(data_norm$PLocID, data_norm$Hang, method = "pearson")
-PCC_Practice <- cor.test(data_norm$Practice, data_norm$Hang, method = "pearson")
-PCC_Precipitation<- cor.test(data_norm$precipitation, data_norm$Hang, method = "pearson")
-PCC_SnapLocID <- cor.test(data_norm$SnapLocID, data_norm$Hang, method = "pearson")
-PCC_Snaptime <- cor.test(data_norm$Snaptime, data_norm$Hang, method = "pearson")
-PCC_Temp <- cor.test(data_norm$Temp, data_norm$Hang, method = "pearson")
-PCC_Turf <- cor.test(data_norm$Turf, data_norm$Hang, method = "pearson")
-PCC_Wind <- cor.test(data_norm$Wind, data_norm$Hang, method = "pearson")
+PCC_Hang <- cor.test(data_norm$Hang, data_norm$Distance, method = "pearson")
+PCC_Game<- cor.test(data_norm$Game, data_norm$Distance, method = "pearson")
+PCC_Grass <- cor.test(data_norm$Grass, data_norm$Distance, method ="pearson")
+PCC_H2F <- cor.test(data_norm$H2F, data_norm$Distance, method = "pearson")
+PCC_OP <- cor.test(data_norm$OP, data_norm$Distance, method = "pearson")
+PCC_PDate <- cor.test(data_norm$PDate, data_norm$Distance, method = "pearson")
+PCC_PlayerIDLS <- cor.test(data_norm$PlayerIDLS, data_norm$Distance, method = "pearson")
+PCC_PlayerIDP <- cor.test(data_norm$PlayerIDP, data_norm$Distance, method = "pearson")
+PCC_PLocID <- cor.test(data_norm$PLocID, data_norm$Distance, method = "pearson")
+PCC_Practice <- cor.test(data_norm$Practice, data_norm$Distance, method = "pearson")
+PCC_Precipitation<- cor.test(data_norm$precipitation, data_norm$Distance, method = "pearson")
+PCC_SnapLocID <- cor.test(data_norm$SnapLocID, data_norm$Distance, method = "pearson")
+PCC_Snaptime <- cor.test(data_norm$Snaptime, data_norm$Distance, method = "pearson")
+PCC_Temp <- cor.test(data_norm$Temp, data_norm$Distance, method = "pearson")
+PCC_Turf <- cor.test(data_norm$Turf, data_norm$Distance, method = "pearson")
+PCC_Wind <- cor.test(data_norm$Wind, data_norm$Distance, method = "pearson")
 ```
 
 ##Variance Threshold
@@ -655,7 +694,7 @@ selected_features <- names(variances[variances >= threshold])
 print(selected_features)
 ```
 ```{r}
-VTDistance <- variances[selected_features[10]] 
+VTHang <- variances[selected_features[9]] 
 VTGame <- variances[selected_features[15]]
 VTGrass <- variances[selected_features[18]]
 VTH2F <- variances[selected_features[8]]
@@ -736,19 +775,19 @@ selected_features <- which(best_solution == 1)
 
 ##Defining columns for the dataframe
 ```{r}
-column1data <- c(IG_Distance, IG_Game, IG_Grass, IG_H2F, IG_OP, IG_PDate, IG_PlayerIDLS, IG_PlayerIDP, IG_PLocID, IG_Practice, IG_Precipitation, IG_SnapLocID, IG_Snaptime, IG_Temp, IG_Turf, IG_Wind)
-column2data <- c(MI_Distance, MI_Game, MI_Grass, MI_H2F, MI_OP, MI_PDate, MI_PlayerIDLS, MI_PlayerIDP, MI_PlocID, MI_Practice, MI_Precipitation, MI_SnapLocID, MI_Snaptime, MI_Temp, MI_Turf, MI_Wind)
-column3data <- c(DistanceChi$p.value, GameChi$p.value, GrassChi$p.value, H2FChi$p.value, OPChi$p.value, DateChi$p.value, PlayerIDLSChi$p.value, PlayerIDPChi$p.value, PLocIDChi$p.value, PracticeChi$p.value, PrecipitationChi$p.value, SnapLocIDChi$p.value, SnaptimeChi$p.value, TempChi$p.value, TurfChi$p.value, WindChi$p.value) 
-column4data <- c(FIDistance, FIGame, FIGrass, FIH2F, FIOP, FIPDate, FIPlayerIDLS, FIPlayerIDP, FIPLocID, FIPractice, FIPrecipitation, FISnapLocID, FISnaptime, FITemp, FITurf, FIWind)
-column5data <- c(FSDistance, FSGame, FSGrass, FSH2F, FSOP, FSPDate, FSPlayerIDLS, FSPlayerIDP, FSPLocID, FSPractice,FSPrecipitation, FSSnapLocID, FSSnaptime, FSTemp, FSTurf, FSWind)
-column6data <- c(PCC_Distance$estimate, PCC_Game$estimate, PCC_Grass$estimate, PCC_H2F$estimate, PCC_OP$estimate, PCC_PDate$estimate, PCC_PlayerIDLS$estimate, PCC_PlayerIDP$estimate, PCC_PLocID$estimate, PCC_Practice$estimate, PCC_Precipitation$estimate, PCC_SnapLocID$estimate, PCC_Snaptime$estimate, PCC_Temp$estimate, PCC_Turf$estimate, PCC_Wind$estimate)
-column7data <- c(VTDistance, VTGame, VTGrass, VTH2F, VTOP, VTPDate, VTPlayerIDLS, VTPlayerIDP, VTPLocID, VTPractice, VTPrecipitation, VTSnapLocID, VTSnaptime, VTTemp, VTTurf, VTWind)
+column1data <- c(IG_Game, IG_Grass, IG_H2F,IG_Hang, IG_OP, IG_PDate, IG_PlayerIDLS, IG_PlayerIDP, IG_PLocID, IG_Practice, IG_Precipitation, IG_SnapLocID, IG_Snaptime, IG_Temp, IG_Turf, IG_Wind)
+column2data <- c( MI_Game, MI_Grass, MI_H2F, MI_Hang, MI_OP, MI_PDate, MI_PlayerIDLS, MI_PlayerIDP, MI_PlocID, MI_Practice, MI_Precipitation, MI_SnapLocID, MI_Snaptime, MI_Temp, MI_Turf, MI_Wind)
+column3data <- c(GameChi$p.value, GrassChi$p.value, H2FChi$p.value,HangChi$p.value ,OPChi$p.value, DateChi$p.value, PlayerIDLSChi$p.value, PlayerIDPChi$p.value, PLocIDChi$p.value, PracticeChi$p.value, PrecipitationChi$p.value, SnapLocIDChi$p.value, SnaptimeChi$p.value, TempChi$p.value, TurfChi$p.value, WindChi$p.value) 
+column4data <- c( FIGame, FIGrass, FIH2F,FIHang ,FIOP, FIPDate, FIPlayerIDLS, FIPlayerIDP, FIPLocID, FIPractice, FIPrecipitation, FISnapLocID, FISnaptime, FITemp, FITurf, FIWind)
+column5data <- c( FSGame, FSGrass, FSH2F,FSHang ,FSOP, FSPDate, FSPlayerIDLS, FSPlayerIDP, FSPLocID, FSPractice,FSPrecipitation, FSSnapLocID, FSSnaptime, FSTemp, FSTurf, FSWind)
+column6data <- c( PCC_Game$estimate, PCC_Grass$estimate, PCC_H2F$estimate, PCC_Hang$estimate,PCC_OP$estimate, PCC_PDate$estimate, PCC_PlayerIDLS$estimate, PCC_PlayerIDP$estimate, PCC_PLocID$estimate, PCC_Practice$estimate, PCC_Precipitation$estimate, PCC_SnapLocID$estimate, PCC_Snaptime$estimate, PCC_Temp$estimate, PCC_Turf$estimate, PCC_Wind$estimate)
+column7data <- c(VTGame, VTGrass, VTH2F,VTHang,VTOP, VTPDate, VTPlayerIDLS, VTPlayerIDP, VTPLocID, VTPractice, VTPrecipitation, VTSnapLocID, VTSnaptime, VTTemp, VTTurf, VTWind)
 
 
 ```
 
 ```{r}
-FSHang <- data.frame(
+FSDistance <- data.frame(
   InformationGain = column1data,
   MutualInformation = column2data,
   CHISquared = column3data,
@@ -784,13 +823,13 @@ print(home_path)
 # --- Information Gain (column1data) ---
 # Assuming these are results from some Information Gain calculation
 # IMPORTANT: These must be single numeric values (or vectors of values)
-IG_Distance <- 0.15 # Replace with actual calculation result e.g. mutinformation(your_main_data_discretized$Distance, your_main_data_discretized$TargetVariable)
-IG_Game <- 0.20
-IG_Grass <- 0.05
-IG_H2F <- 0.10
-IG_OP <- 0.18
-IG_PDate <- 0.07
-IG_PlayerIDLS <- 0.25
+IG_Hang <- 0.53569 # Replace with actual calculation result e.g. mutinformation(your_main_data_discretized$Distance, your_main_data_discretized$TargetVariable)
+IG_Game <- .36357
+IG_Grass <- .1073379
+IG_H2F <- .3749105
+IG_OP <- .37884785
+IG_PDate <- .3788
+IG_PlayerIDLS <- .3632
 IG_PlayerIDP <- 0.22
 IG_PLocID <- 0.08
 IG_Practice <- 0.03
