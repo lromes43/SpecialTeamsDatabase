@@ -230,6 +230,31 @@ MI_Precipitation <- mutinformation(data_norm$precipitationCat,  data_norm$Distan
 MI_Temp <- mutinformation(data_norm$TempCat,  data_norm$DistanceCat, method = "emp")
 ```
 
+
+
+```{r}
+MIValues <- c(
+  Game = MI_Game,
+  Grass = MI_Grass,
+  H2F = MI_H2F,
+  Hang = MI_Hang, 
+  OP = MI_OP, 
+  Pdate = MI_PDate,
+  PlayerIDLS = MI_PlayerIDLS,
+  PlayerrIDP = MI_PlayerIDP, 
+  PLOCID = MI_PlocID, 
+  Practice = MI_Practice,
+  Precipitation = MI_Precipitation,
+  SnapLocID = MI_SnapLocID,
+  Snaptime = MI_Snaptime, 
+  Temp = MI_Temp, 
+  Turf = MI_Turf,
+  Wind = MI_Wind
+)
+
+print(MIValues)
+```
+
 ##Installing Chi-Squared packages
 ```{r}
 install.packages("MASS")
@@ -509,6 +534,33 @@ DateChi <- print(chisq.test(DaysSinceAug1)) ##Test for Date
 ```
 
 
+
+
+```{r}
+ChiValues <- c(
+  Game = GameChi,
+  Grass = GrassChi,
+  H2F = H2FChi,
+  Hang = HangChi, 
+  OP = OPChi, 
+  Pdate = DateChi,
+  PlayerIDLS = PlayerIDLSChi,
+  PlayerrIDP = PlayerIDPChi, 
+  PLOCID = PLocIDChi, 
+  Practice = PracticeChi,
+  Precipitation = PrecipitationChi,
+  SnapLocID = SnapLocIDChi,
+  Snaptime = SnaptimeChi, 
+  Temp = TempChi, 
+  Turf = TurfChi,
+  Wind = WindChi
+)
+
+print(ChiValues)
+```
+
+
+
 ##Fisher Information Loading
 ```{r}
 numericdata <- data_norm[sapply(data_norm, is.numeric)]
@@ -539,6 +591,28 @@ FISnaptime <- fisher_info_values[6]
 FITemp <- fisher_info_values[18]
 FITurf <- fisher_info_values[17]
 FIWind <- fisher_info_values[15]
+```
+```{r}
+Fisher <- c(
+  Game = FIGame,
+  Grass = FIGrass,
+  H2F = FIH2F,
+  Hang = FIHang, 
+  OP = FIOP, 
+  Pdate = FIPDate,
+  PlayerIDLS = FIPlayerIDLS,
+  PlayerrIDP = FIPlayerIDP, 
+  PLOCID = FIPLocID, 
+  Practice = FIPractice,
+  Precipitation = FIPrecipitation,
+  SnapLocID = FISnapLocID,
+  Snaptime = FISnaptime, 
+  Temp = FITemp,
+  Turf = FITurf,
+  Wind = FIWind
+)
+
+print(Fisher)
 ```
                             
 
@@ -646,6 +720,29 @@ FSWind <- fisher_scores[10]
 FSPrecipitation <- fisher_scores[14]
 ```
 
+```{r}
+FisherScore <- c(
+  Game = FSGame,
+  Grass = FSGrass,
+  H2F = FSH2F,
+  Hang = FSHang, 
+  OP = FSOP, 
+  Pdate = FSPDate,
+  PlayerIDLS = FSPlayerIDLS,
+  PlayerrIDP = FSPlayerIDP, 
+  PLOCID = FSPLocID, 
+  Practice = FSPractice,
+  Precipitation = FSPrecipitation,
+  SnapLocID = FSSnapLocID,
+  Snaptime = FSSnaptime, 
+  Temp = FSTemp, 
+  Turf = FSTurf,
+  Wind = FSWind
+)
+
+print(FisherScore)
+```
+
 
 ##Pearson Correlation Coefficient (R)
 
@@ -682,6 +779,29 @@ PCC_Turf <- cor.test(data_norm$Turf, data_norm$Distance, method = "pearson")
 PCC_Wind <- cor.test(data_norm$Wind, data_norm$Distance, method = "pearson")
 ```
 
+```{r}
+PCC <- c(
+  Game = PCC_Game,
+  Grass = PCC_Grass,
+  H2F = PCC_H2F,
+  Hang = PCC_Hang, 
+  OP = PCC_OP, 
+  Pdate = PCC_PDate,
+  PlayerIDLS = PCC_PlayerIDLS,
+  PlayerrIDP = PCC_PlayerIDP, 
+  PLOCID = PCC_PLocID, 
+  Practice = PCC_Practice,
+  Precipitation = PCC_Precipitation,
+  SnapLocID = PCC_SnapLocID,
+  Snaptime = PCC_Snaptime, 
+  Temp = PCC_Temp, 
+  Turf = PCC_Turf,
+  Wind = PCC_Wind
+)
+
+print(PCC)
+```
+
 ##Variance Threshold
 
 ##Caluclating Variance
@@ -712,6 +832,29 @@ VTTurf <- variances[selected_features[10]]
 
 VTWind <- variances[selected_features[20]]
 
+```
+
+```{r}
+VT <- c(
+  Game = VTGame,
+  Grass = VTGrass,
+  H2F = VTH2F,
+  Hang = VTHang, 
+  OP = VTOP, 
+  Pdate = VTPDate,
+  PlayerIDLS = VTPlayerIDLS,
+  PlayerrIDP = VTPlayerIDP, 
+  PLOCID = VTPLocID, 
+  Practice = VTPractice,
+  Precipitation = VTPrecipitation,
+  SnapLocID =VTSnapLocID,
+  Snaptime = VTSnaptime, 
+  Temp = VTTemp, 
+  Turf = VTTurf,
+  Wind =VTWind
+)
+
+print(VT)
 ```
 
 
