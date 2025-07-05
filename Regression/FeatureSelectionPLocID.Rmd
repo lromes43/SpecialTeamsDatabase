@@ -720,10 +720,12 @@ FSTemp <- fisher_scores[16]
 FSTurf <- fisher_scores[12]
 FSWind <- fisher_scores[10]
 FSPrecipitation <- fisher_scores[14]
+FSDistance <- fisher_scores[1]
 ```
 
 ```{r}
 FisherScore <- c(
+  Distance = FSDistance,
   Game = FSGame,
   Grass = FSGrass,
   H2F = FSH2F,
@@ -732,7 +734,6 @@ FisherScore <- c(
   Pdate = FSPDate,
   PlayerIDLS = FSPlayerIDLS,
   PlayerrIDP = FSPlayerIDP, 
-  PLOCID = FSPLocID, 
   Practice = FSPractice,
   Precipitation = FSPrecipitation,
   SnapLocID = FSSnapLocID,
@@ -763,26 +764,28 @@ str(data_norm$Hang)
 
 ##PCC Calculation, y= dist, x = different features
 ```{r}
-PCC_Hang <- cor.test(data_norm$Hang, data_norm$Distance, method = "pearson")
-PCC_Game<- cor.test(data_norm$Game, data_norm$Distance, method = "pearson")
-PCC_Grass <- cor.test(data_norm$Grass, data_norm$Distance, method ="pearson")
-PCC_H2F <- cor.test(data_norm$H2F, data_norm$Distance, method = "pearson")
-PCC_OP <- cor.test(data_norm$OP, data_norm$Distance, method = "pearson")
-PCC_PDate <- cor.test(data_norm$PDate, data_norm$Distance, method = "pearson")
-PCC_PlayerIDLS <- cor.test(data_norm$PlayerIDLS, data_norm$Distance, method = "pearson")
-PCC_PlayerIDP <- cor.test(data_norm$PlayerIDP, data_norm$Distance, method = "pearson")
-PCC_PLocID <- cor.test(data_norm$PLocID, data_norm$Distance, method = "pearson")
-PCC_Practice <- cor.test(data_norm$Practice, data_norm$Distance, method = "pearson")
-PCC_Precipitation<- cor.test(data_norm$precipitation, data_norm$Distance, method = "pearson")
-PCC_SnapLocID <- cor.test(data_norm$SnapLocID, data_norm$Distance, method = "pearson")
-PCC_Snaptime <- cor.test(data_norm$Snaptime, data_norm$Distance, method = "pearson")
-PCC_Temp <- cor.test(data_norm$Temp, data_norm$Distance, method = "pearson")
-PCC_Turf <- cor.test(data_norm$Turf, data_norm$Distance, method = "pearson")
-PCC_Wind <- cor.test(data_norm$Wind, data_norm$Distance, method = "pearson")
+PCC_Distance <- cor.test(data_norm$Distance, data_norm$PLocID, method = "pearson")
+PCC_Hang <- cor.test(data_norm$Hang, data_norm$PLocID, method = "pearson")
+PCC_Game<- cor.test(data_norm$Game, data_norm$PLocID, method = "pearson")
+PCC_Grass <- cor.test(data_norm$Grass, data_norm$PLocID, method ="pearson")
+PCC_H2F <- cor.test(data_norm$H2F, data_norm$PLocID, method = "pearson")
+PCC_OP <- cor.test(data_norm$OP, data_norm$PLocID, method = "pearson")
+PCC_PDate <- cor.test(data_norm$PDate, data_norm$PLocID, method = "pearson")
+PCC_PlayerIDLS <- cor.test(data_norm$PlayerIDLS, data_norm$PLocID, method = "pearson")
+PCC_PlayerIDP <- cor.test(data_norm$PlayerIDP, data_norm$PLocID, method = "pearson")
+PCC_PLocID <- cor.test(data_norm$PLocID, data_norm$PLocID, method = "pearson")
+PCC_Practice <- cor.test(data_norm$Practice, data_norm$PLocID, method = "pearson")
+PCC_Precipitation<- cor.test(data_norm$precipitation, data_norm$PLocID, method = "pearson")
+PCC_SnapLocID <- cor.test(data_norm$SnapLocID, data_norm$PLocID, method = "pearson")
+PCC_Snaptime <- cor.test(data_norm$Snaptime, data_norm$PLocID, method = "pearson")
+PCC_Temp <- cor.test(data_norm$Temp, data_norm$PLocID, method = "pearson")
+PCC_Turf <- cor.test(data_norm$Turf, data_norm$PLocID, method = "pearson")
+PCC_Wind <- cor.test(data_norm$Wind, data_norm$PLocID, method = "pearson")
 ```
 
 ```{r}
 PCC <- c(
+  Distance = PCC_Distance,
   Game = PCC_Game,
   Grass = PCC_Grass,
   H2F = PCC_H2F,
@@ -791,7 +794,6 @@ PCC <- c(
   Pdate = PCC_PDate,
   PlayerIDLS = PCC_PlayerIDLS,
   PlayerrIDP = PCC_PlayerIDP, 
-  PLOCID = PCC_PLocID, 
   Practice = PCC_Practice,
   Precipitation = PCC_Precipitation,
   SnapLocID = PCC_SnapLocID,
@@ -830,14 +832,15 @@ VTPrecipitation <- variances[selected_features[16]]
 VTSnapLocID <- variances[selected_features[4]]
 VTSnaptime <- variances[selected_features[6]]
 VTTemp <- variances[selected_features[11]]
-VTTurf <- variances[selected_features[10]] 
-
-VTWind <- variances[selected_features[20]]
+VTTurf <- variances[selected_features[20]] 
+VTDistance <- variances[selected_features[10]]
+VTWind <- variances[selected_features[17]]
 
 ```
 
 ```{r}
 VT <- c(
+  Distance = VTDistance,
   Game = VTGame,
   Grass = VTGrass,
   H2F = VTH2F,
@@ -846,7 +849,6 @@ VT <- c(
   Pdate = VTPDate,
   PlayerIDLS = VTPlayerIDLS,
   PlayerrIDP = VTPlayerIDP, 
-  PLOCID = VTPLocID, 
   Practice = VTPractice,
   Precipitation = VTPrecipitation,
   SnapLocID =VTSnapLocID,
