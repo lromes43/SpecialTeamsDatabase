@@ -114,3 +114,5 @@ print(f"Formula: {Coefficients} + {Intercept}")
 Score = regr.score(X,y)
 print(f"Score for all features: {Score}")
 
+df_new.to_csv('CleanedDistanceData', index=False)
+
