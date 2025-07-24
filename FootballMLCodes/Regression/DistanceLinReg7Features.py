@@ -30,3 +30,4 @@ Score = regr.score(X,y)
 
 print(f"Score: {Score}")
 
+Seven_Featuresdf.to_csv('CleanedDistanceDataReg7Features', index= False)
