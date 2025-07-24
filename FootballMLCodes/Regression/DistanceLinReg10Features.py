@@ -4,7 +4,7 @@ from sklearn import linear_model
 from matplotlib import pyplot as plt
 
 
-df = pd.read_csv("Football Data/Punt Data/CleanedDistanceDataReg")
+df = pd.read_csv("/Users/lukeromes/Desktop/Personal/Football ML/Football Data/Punt Data/CleanedDistanceDataReg17Features")
 print(df.head())
 
 colnames = df.columns.tolist()
@@ -34,6 +34,10 @@ print(f"Formula: {Coefficients} + {Intercept}")
 Score = regr.score(X,y)
 print(f"Score for 10 features: {Score}")
 
+
+
+
+TenFeaturesdf.to_csv('CleanedDistanceDataReg10Features', index = False)
 
 
 
