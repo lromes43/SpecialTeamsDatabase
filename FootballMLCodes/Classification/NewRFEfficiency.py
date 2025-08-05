@@ -145,9 +145,9 @@ OptimumNumLeaf = float(cross_val_score(RandomForestClassifier(n_estimators=10, c
 Score_Trends[4] = OptimumNumLeaf
 
 
-#No difference
 
-model = RandomForestClassifier(n_estimators=10, criterion='gini',min_samples_split=5, min_samples_leaf=1, random_state=42)
+
+model = RandomForestClassifier(n_estimators=10, criterion='gini',min_samples_split=5, min_samples_leaf=3, random_state=42)
 new_score = float(cross_val_score(model, X_test, y_test).mean())
 print(f"Updated Score: {new_score}")
 
