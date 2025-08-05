@@ -20,3 +20,5 @@ RFCV = cross_val_score(RandomForestClassifier(), X, y).mean()
 print(f"Log Reg CV Score: {LogRegCV}")
 print(f"SVM CV Score: {SVMCV}")
 print(f"RF CV Score: {RFCV}")
+
+#RF is best model overall
