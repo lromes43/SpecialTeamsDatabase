@@ -78,16 +78,20 @@ plt.legend()
 plt.show()
 
 
-'''
-From the graph can see four clusters. These clusters explain the relation between
-hang and distance as some punts such as turnover punts result in longer distances
-with higher hang times whileas rugby style punts offer great distance but lack hang
-further some conditions such as wind require lower kicks edplaining those points and then
-there are the mis-hits.
-'''
 
 features_to_average = ['Distance', 'Hang']
 cluster_averages = df.groupby('cluster')[features_to_average].mean()
 
 
 print(f"Cluster Averages: {cluster_averages}")
+
+'''
+From the graph and resulting table below can see four clusters (0,1,2,3) have been created.
+Each Cluster is made of the components Distance and Hang.
+In cluster 0 can see both the highest distance and hang showing longer punt leads to higher hang
+In cluster 1 see decrease in distance and hang showing decrease in hang leads to decrease in distance and vise versa
+In cluster 2 see once again a lowered distance leads to lower hang and vise versa
+In cluster 3 see average and lowered hang, this could be due to a multitude of reasons from different kind of punts such as rugby punts which have greater distance 
+but less hang as well as in windy conditions where a lower punt is required.
+
+'''
