@@ -86,4 +86,8 @@ further some conditions such as wind require lower kicks edplaining those points
 there are the mis-hits.
 '''
 
+features_to_average = ['Distance', 'Hang']
+cluster_averages = df.groupby('cluster')[features_to_average].mean()
 
+
+print(f"Cluster Averages: {cluster_averages}")
