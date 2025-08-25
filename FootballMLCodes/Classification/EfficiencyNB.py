@@ -9,6 +9,8 @@ from sklearn.naive_bayes import MultinomialNB
 df = pd.read_csv("/Users/lukeromes/Desktop/Personal/Football ML/Football Data/Punt Data/PuntDataPulled.csv")
 print(df.head(3))
 
+print(df.columns.to_list())
+
 
 target = df['Efficiency']
 input = df['SnapLocID']
