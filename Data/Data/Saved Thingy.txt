@@ -1,0 +1,147 @@
+Last login: Wed Oct  1 21:50:14 on ttys000
+(base) lukeromes@Lukes-MacBook-Pro ~ % cd '/Users/lukeromes/Desktop/KSUSpecialTeamsDB'
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git add football_backup.sql
+git add readme
+fatal: pathspec 'readme' did not match any files
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % ls
+football_backup.sql	README.md
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git add README.md
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git commit -m "Added the README file to the repository"
+git push
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+Everything up-to-date
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git push -u origin main
+branch 'main' set up to track 'origin/main'.
+Everything up-to-date
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % (base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % pwd
+# Should output something like: /Users/lukeromes/Desktop/KSUSpecialTeamsDB
+zsh: parse error near `lukeromes@Lukes-MacB...'
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % rm -rf .git
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git remote add origin https://github.com/lromes43/FootballMLCodes.git
+fatal: not a git repository (or any of the parent directories): .git
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git init
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /Users/lukeromes/Desktop/KSUSpecialTeamsDB/.git/
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git add .
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git commit -m "inital commit"
+[master (root-commit) 353dd3e] inital commit
+ 2 files changed, 334 insertions(+)
+ create mode 100644 README.md
+ create mode 100644 football_backup.sql
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git remote add orgin ttps://github.com/lromes43/FootballMLCodes.git
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git push -u origin master
+fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git remote remove orgin
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git remote add origin https://github.com/lromes43/FootballMLCodes.git
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git push -u origin master 
+To https://github.com/lromes43/FootballMLCodes.git
+ ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'https://github.com/lromes43/FootballMLCodes.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git pull origin master --allow-unrelated-histories
+remote: Enumerating objects: 18203, done.
+remote: Counting objects: 100% (380/380), done.
+remote: Compressing objects: 100% (233/233), done.
+remote: Total 18203 (delta 271), reused 229 (delta 142), pack-reused 17823 (from 3)
+Receiving objects: 100% (18203/18203), 130.37 MiB | 50.80 MiB/s, done.
+Resolving deltas: 100% (2206/2206), done.
+From https://github.com/lromes43/FootballMLCodes
+ * branch              master     -> FETCH_HEAD
+ * [new branch]        master     -> origin/master
+hint: You have divergent branches and need to specify how to reconcile them.
+hint: You can do so by running one of the following commands sometime before
+hint: your next pull:
+hint:
+hint:   git config pull.rebase false  # merge
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint:
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+fatal: Need to specify how to reconcile divergent branches.
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git push -u origin master 
+To https://github.com/lromes43/FootballMLCodes.git
+ ! [rejected]          master -> master (non-fast-forward)
+error: failed to push some refs to 'https://github.com/lromes43/FootballMLCodes.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git pull origin master --allow-unrelated-histories
+From https://github.com/lromes43/FootballMLCodes
+ * branch              master     -> FETCH_HEAD
+hint: You have divergent branches and need to specify how to reconcile them.
+hint: You can do so by running one of the following commands sometime before
+hint: your next pull:
+hint:
+hint:   git config pull.rebase false  # merge
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint:
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+fatal: Need to specify how to reconcile divergent branches.
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git pull origin master --allow-unrelated-histories --no-rebase
+From https://github.com/lromes43/FootballMLCodes
+ * branch              master     -> FETCH_HEAD
+Auto-merging README.md
+CONFLICT (add/add): Merge conflict in README.md
+Automatic merge failed; fix conflicts and then commit the result.
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % code README.md
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git add README.md
+(base) lukeromes@Lukes-MacBook-Pro KSUSpecialTeamsDB % git commit
+hint: Waiting for your editor to close the file... 
+#       new file:   FootballMLCodes/Classification/NumberParametersTunedVSAccuracy.png
+#       new file:   FootballMLCodes/Clustering/DistanceHangClustering.py
+#       new file:   FootballMLCodes/Clustering/EfficiencyKmeans.py
+#       new file:   FootballMLCodes/Clustering/LocsOPDistClustering.py
+#       new file:   FootballMLCodes/FeatureSelectionHang.Rmd
+#       new file:   FootballMLCodes/FootballMLRegressionFeatureSelection.Rproj
+#       new file:   FootballMLCodes/Regression/DistanceLinReg.py
+#       new file:   FootballMLCodes/Regression/DistanceLinReg10Features.py
+#       new file:   FootballMLCodes/Regression/DistanceLinReg3Features.py
+#       new file:   FootballMLCodes/Regression/DistanceLinReg5Features.py
+#       new file:   FootballMLCodes/Regression/DistanceLinReg7Features.py
+#       new file:   FootballMLCodes/Regression/DistanceLinRegPattern.py
+#       new file:   FootballMLCodes/Regression/FeatureSelectionDistance.Rmd
+#       new file:   FootballMLCodes/Regression/FeatureSelectionHang.Rmd
+#       new file:   FootballMLCodes/Regression/FeatureSelectionPLocID.Rmd
+#       new file:   FootballMLCodes/Regression/LinRegCorrelation.csv
+#       new file:   FootballMLCodes/Regression/PuntLinRegRelations.rtf
+#       new file:   FootballMLCodes/Regression/Regression.Rproj
+#       modified:   README.md#
+~                                                                               
+~                                                                               
+~                                                                               
+-- INSERT --
