@@ -143,17 +143,18 @@ UNLOCK TABLES;
 -- Table structure for table `kickoff`
 --
 
+
 DROP TABLE IF EXISTS `kickoff`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
+
 CREATE TABLE `kickoff` (
-  `HangTime` float(3,2) DEFAULT NULL,
-  `Distance` int DEFAULT NULL,
-  `KOID` int NOT NULL,
-  `KOlocID` int DEFAULT NULL,
-  `playerIDKO` int DEFAULT NULL,
-  `KOdate` date DEFAULT NULL,
-  `efficiency` int DEFAULT NULL,
+  `HangTime` FLOAT DEFAULT NULL, -- CHANGED FROM float(3,2)
+  `Distance` INT DEFAULT NULL,
+  `KOID` INT NOT NULL,
+  `KOlocID` INT DEFAULT NULL,
+  `playerIDKO` INT DEFAULT NULL,
+  `KOdate` DATE DEFAULT NULL,
+  `efficiency` INT DEFAULT NULL,
   PRIMARY KEY (`KOID`),
   KEY `FK_locationID` (`KOlocID`),
   KEY `FK_playerIDKO` (`playerIDKO`),
@@ -162,11 +163,11 @@ CREATE TABLE `kickoff` (
   CONSTRAINT `FK_locationID` FOREIGN KEY (`KOlocID`) REFERENCES `location` (`locationid`),
   CONSTRAINT `FK_playerIDKO` FOREIGN KEY (`playerIDKO`) REFERENCES `player` (`playerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `kickoff`
---
+
+ALTER TABLE `kickoff`
+ADD CONSTRAINT `FK_KO_Norm` FOREIGN KEY (`KOID`) REFERENCES (`KO_ID`);
+
 
 LOCK TABLES `kickoff` WRITE;
 /*!40000 ALTER TABLE `kickoff` DISABLE KEYS */;
@@ -198,7 +199,43 @@ INSERT INTO `location` VALUES ('Poor',1),('Average',2),('Elite',3);
 /*!40000 ALTER TABLE `location` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
+
+Drop Table if EXISTS `Norm_Values`;
+
+create TABLE Norm_Values_KO (
+    KO_ID int,
+    MIN_KO_Dist FLOAT,
+    MAX_KO_Dist FLOAT,
+    KO_Dist_Norm FLOAT,
+    MAX_KO_Hang FLOAT,
+    MIN_KO_Hang FLOAT,
+    KO_Hang_Norm FLOAT,
+    MIN_KO_LOC FLOAT,
+    MAX_KO_Loc FLOAT,
+    KO_LOC_Norm FLOAT, 
+    PRIMARY KEY(KO_ID)
+);
+INSERT INTO Norm_Values_KO (
+    KO_ID, MIN_KO_Dist, MAX_KO_Dist, KO_Dist_Norm, 
+    MAX_KO_Hang, MIN_KO_Hang, KO_Hang_Norm, 
+    MIN_KO_LOC, MAX_KO_Loc, KO_LOC_Norm
+)
+SELECT
+    KOID,
+    MIN(distance) OVER () AS MIN_KO_Dist, 
+    MAX(distance) OVER () AS MAX_KO_Dist, 
+    (distance - MIN(distance) OVER ()) / NULLIF((MAX(distance) OVER () - MIN(distance) OVER ()), 0) AS KO_Dist_Norm,
+    
+    MAX(HangTime) OVER () AS MAX_KO_HANG,  
+    MIN(HangTime) OVER () AS MIN_KO_Hang,  
+    (HangTime - MIN(HangTime) OVER ()) / NULLIF((MAX(HangTime) OVER () - MIN(HangTime) OVER ()), 0) AS KO_Hang_Norm,
+    
+    MIN(KOlocID) OVER () AS MIN_KO_LOC,  
+    MAX(KOlocID) OVER () AS MAX_KO_LOC,  
+    (KOlocID - MIN(KOlocID) OVER ()) / NULLIF((MAX(KOlocID) OVER () - MIN(KOlocID) OVER ()), 0) AS KO_LOC_Norm
+FROM
+    kickoff; 
+
 -- Table structure for table `player`
 --
 
