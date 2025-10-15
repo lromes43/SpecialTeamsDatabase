@@ -626,6 +626,70 @@ SET Returned = 0 WHERE KOID = 165;
 
 
 
+DROP TABLE IF EXISTS `Norm_Values_Punt` ;
+CREATE TABLE Norm_Values_Punt (
+  `PuntID` int, 
+  `MIN_P_DIST` float, 
+  `MAX_P_DIST` float, 
+  `P_DIST_NORM` float, 
+  `MIN_P_HANG` float, 
+  `MAX_P_HANG` float, 
+  `P_HANG_NORM` float, 
+  `MIN_P_LOC` float, 
+  `MAX_P_LOC` float, 
+  `P_LOC_Norm` FLOAT
+);
+
+ALTER Table Norm_Values_Punt
+ADD Primary Key (PuntID);
+
+ALTER Table punt
+ADD FOREIGN Key (PuntID) REFERENCES Norm_Values_Punt(PuntID);
+
+
+
+
+
+INSERT INTO Norm_Values_Punt (
+    PuntID, MIN_P_DIST, MAX_P_DIST, P_DIST_NORM,
+    MIN_P_HANG, MAX_P_HANG, P_HANG_NORM,
+    MIN_P_LOC, MAX_P_LOC, P_LOC_Norm
+)
+SELECT
+    PuntID,
+    MIN(Distance) OVER () AS MIN_P_DIST,
+    MAX(Distance) OVER () AS MAX_P_DIST,
+    (Distance - MIN(Distance) OVER ()) / NULLIF((MAX(Distance) OVER () - MIN(Distance) OVER ()), 0) AS  P_DIST_NORM,
+
+    MIN(hang) OVER () AS MIN_P_HANG, 
+    MAX(hang) OVER () AS MAX_P_HANG,  
+    (hang- MIN(hang) OVER ()) / NULLIF((MAX(hang) OVER () - MIN(hang) OVER ()), 0) AS P_HANG_NORM,
+
+    MIN(PLocID) OVER () AS MIN_P_LOC,
+    MAX(PLocID) OVER () AS MAX_P_LOC,
+    (PLocID - MIN(PLocID) OVER ()) / NULLIF((MAX(PLocID) OVER () - MIN(PLocID) OVER ()), 0) AS P_LOC_Norm
+FROM
+    punt;
+
+
+DROP VIEW IF EXISTS `punt_view`;
+
+CREATE VIEW punt_view AS
+select n.PuntID, p.hang, p.Distance, p.PLocID, (0.27 * (N.P_HANG_NORM)  + 0.35 * (N.P_DIST_NORM) + 0.38 * (N.P_LOC_Norm))  AS WeightedSum_Score
+FROM punt p
+inner join Norm_Values_Punt n
+ON p.PuntID = n.PuntID;
+
+
+
+
+
+
+
+
+
+
+
 
 --
 
