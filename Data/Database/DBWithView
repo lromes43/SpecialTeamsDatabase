@@ -564,6 +564,68 @@ set Returned = 1, Return_Yards = 6 where PuntID = 321;
 UPDATE punt 
 set Returned = 1, Return_Yards = -1 WHERE PuntID = 322;
 
+alter TABLE kickoff
+Add Returned tinyint(1), 
+Add Return_Yards int;
+
+UPDATE kickoff
+set Returned = 1, Return_Yards = 26 where KOID = 140;
+UPDATE kickoff
+set Returned = 1, Return_Yards = 30 WHERE KOID = 141;
+UPDATE kickoff
+set Returned = 1, Return_Yards = 17 WHERE KOID = 142;
+UPDATE kickoff
+set Returned = 1, Return_Yards = 29 WHERE KOID = 143;
+UPDATE kickoff
+set Returned = 0 WHERE KOID = 144;
+
+UPDATE kickoff
+set Returned = 0 where KOID = 145;
+UPDATE kickoff
+set Returned  = 0 WHERE KOID = 146;
+UPDATE kickoff
+set Distance = 13, Returned = 0 WHERE KOID = 147;
+
+UPDATE kickoff
+set Returned = 1, Return_Yards = 32 WHERE KOID = 148;
+UPDATE kickoff
+set Returned = 0 WHERE KOID = 149;
+UPDATE kickoff
+set Returned = 0 WHERE KOID = 150;
+UPDATE kickoff
+set Returned = 0 WHERE KOID = 151;
+UPDATE kickoff
+set Returned = 0 WHERE KOid = 152;
+UPDATE kickoff
+set Returned = 0 WHERE KOID = 153;
+UPDATE kickoff
+set Distance = 12, Returned = 0 WHERE KOID = 154;
+
+UPDATE kickoff
+set Returned = 1, Return_Yards = 24 WHERE KOID = 155;
+UPDATE kickoff 
+set Returned = 0  WHERE KOID = 156;
+UPDATE kickoff
+set Returned = 1, Return_Yards = 20 WHERE KOID = 157;
+UPDATE kickoff 
+set Returned = 0 WHERE KOID = 158;
+UPDATE kickoff
+set Returned = 0 WHERE KOID = 159;
+UPDATE kickoff 
+set Returned = 0 WHERE KOID = 160;
+UPDATE kickoff
+SET Returned = 1, Return_Yards = 21 WHERE KOID = 161;
+UPDATE kickoff
+set Returned = 1, Return_Yards = 17 WHERE KOID = 162;
+UPDATE kickoff
+SET Returned = 1, Return_Yards = 26 WHERE KOID = 163;
+UPDATE kickoff
+set Returned = 1, Return_Yards = 22 WHERE KOID = 164;
+UPDATE kickoff  
+SET Returned = 0 WHERE KOID = 165;
+
+
+
 
 --
 
